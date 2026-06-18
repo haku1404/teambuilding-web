@@ -1,0 +1,496 @@
+<!doctype html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>A3 Badminton Club - Offline Team Building</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="./style.css" />
+</head>
+
+<body>
+  <!-- Navbar -->
+  <nav id="navbar" class="glass-nav">
+    <div class="nav-container">
+      <a href="#" class="logo">A3 Badminton.</a>
+      <div class="nav-links">
+        <a href="#hero">Trang chủ</a>
+        <a href="#journey">Hành trình</a>
+        <a href="#location">Địa điểm</a>
+        <a href="#space">Không gian</a>
+        <a href="#services">Trải nghiệm</a>
+        <a href="#menu">Thực đơn</a>
+        <a href="#gallery">Thư viện</a>
+        <a href="#members">Thành viên</a>
+      </div>
+      <a href="#members" class="btn-primary nav-cta">Tham gia</a>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <header id="hero" class="section">
+    <div class="hero-bg">
+      <div class="overlay"></div>
+    </div>
+    <div class="hero-content fade-up">
+      <span class="badge glass-card">A3 Badminton Club</span>
+      <h1 class="hero-title">Offline Team Building</h1>
+      <p class="hero-subtitle">"Vui chơi hết mình, đập cầu hết sức!"</p>
+
+      <div class="hero-widgets fade-up delay-2">
+        <div class="countdown-container glass-card">
+          <div class="countdown-timer">
+            <div class="time-box"><span id="cd-days">00</span>
+              <p>Ngày</p>
+            </div>
+            <span class="colon">:</span>
+            <div class="time-box"><span id="cd-hours">00</span>
+              <p>Giờ</p>
+            </div>
+            <span class="colon">:</span>
+            <div class="time-box"><span id="cd-mins">00</span>
+              <p>Phút</p>
+            </div>
+            <span class="colon">:</span>
+            <div class="time-box"><span id="cd-secs">00</span>
+              <p>Giây</p>
+            </div>
+          </div>
+          <div class="progress-road">
+            <div class="start-point">Now</div>
+            <div class="road-container">
+              <div class="vehicle-wrapper" id="cd-vehicle">
+                <div class="smoke-particles">
+                  <span></span><span></span><span></span>
+                </div>
+                <div class="car-body">
+                  <div class="car-top"></div>
+                  <div class="car-base"></div>
+                  <div class="wheel wheel-left">
+                    <div class="wheel-inner"></div>
+                  </div>
+                  <div class="wheel wheel-right">
+                    <div class="wheel-inner"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="road-line"></div>
+            </div>
+            <div class="end-point">11/07</div>
+          </div>
+        </div>
+
+        <!-- Weather Widget -->
+        <div class="weather-widget glass-card">
+          <div class="weather-header">Dự báo 3 ngày tới (Sóc Sơn)</div>
+          <div class="weather-days" id="weather-days-container">
+            <!-- JS will inject here -->
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="scroll-indicator">
+      <div class="mouse"></div>
+    </div>
+  </header>
+
+  <!-- Journey Section -->
+  <section id="journey" class="section">
+    <div class="container">
+      <div class="section-header fade-up">
+        <h2 class="section-title">Hành Trình Trải Nghiệm</h2>
+        <p class="section-desc">2 ngày 1 đêm cháy hết mình cùng đồng đội</p>
+      </div>
+      <div class="floating-deco deco-1">🏸</div>
+      <div class="floating-deco deco-2">👟</div>
+      <div class="floating-deco deco-3">🏸</div>
+      <div class="floating-deco deco-4">🏆</div>
+      <div class="floating-deco deco-5">💧</div>
+      <div class="floating-deco deco-6">🏅</div>
+      <div class="journey-grid" id="journey-grid">
+        <!-- Cards injected by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Location Section -->
+  <section id="location" class="location-section">
+    <div class="container fade-up">
+      <div class="location-content" style="text-align: center;">
+        <h2 style="color: white; z-index: 1; position: relative;">Địa Điểm Nghỉ Dưỡng</h2>
+        <p class="subtitle" style="color: #cbd5e1; z-index: 1; position: relative; margin-bottom: 20px;">Tano Stone Resort - Tang Xinh Sweet Home, Minh Phú, Sóc Sơn, Hà Nội</p>
+        
+        <div class="location-layout" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; z-index: 1; position: relative; text-align: left;">
+          <!-- Bản đồ -->
+          <div class="map-container glass-card" style="border-radius: 12px; overflow: hidden; padding: 0; min-height: 400px; display: flex; flex-direction: column;">
+            <div style="padding: 15px; background: rgba(15, 23, 42, 0.8); border-bottom: 1px solid rgba(255,255,255,0.1);">
+              <h3 style="color: #fff; margin: 0; font-size: 1.1rem;">📍 Bản Đồ Chỉ Đường</h3>
+            </div>
+            <iframe
+              src="https://maps.google.com/maps?q=Tano+Stone+Resort+Minh+Phú+Sóc+Sơn+Hà+Nội&t=&z=14&ie=UTF8&iwloc=&output=embed"
+              width="100%" style="border:0; flex: 1; min-height: 350px;" allowfullscreen="" loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"></iframe>
+          </div>
+          
+          <!-- Hình ảnh từ GMaps -->
+          <div class="gmap-gallery glass-card" style="border-radius: 12px; padding: 15px; display: flex; flex-direction: column; background: rgba(15, 23, 42, 0.8);">
+            <h3 style="color: #fff; margin: 0 0 15px 0; font-size: 1.1rem;">📸 Hình Ảnh Từ Google Maps</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; flex: 1;">
+              <img src="https://lh3.googleusercontent.com/gps-cs-s/APNQkAH5Uxw3nqrxmK7zBxh9UEcS4S2V__a0QKeOVSEm2LqXCsRIec8HxDvn0Lna1NOx8acyuoc458XZ-T5k95v6Ae4KS3hWdPfEQsKkkVpFXB51V8L5NDYBe657DbrtYPS-1eETvCLElA=s0" class="photo-img" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px; min-height: 160px; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+              <img src="https://lh3.googleusercontent.com/gps-cs-s/APNQkAFUV_oAvX_WVnZr6JUACgFMWw78PDgxPYfWGYuVOXJuRH_jNKiJh7VH6Xb5WKrxbG3NNHwNEwOr3gE5fbpPPR3Sbc_FBX1OXJSM8JkFcoBapDm4IdC30BdskA6yZrpSa7uVgN0=s0" class="photo-img" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px; min-height: 160px; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+              <img src="https://lh3.googleusercontent.com/gps-cs-s/APNQkAHtKYW8bz2SU7vi7n14yNUkbcmK8ZYnhY6nmY7oNfmtYxwJW94UJyrMJHLfIQYyuMPlrdzLmENgE-GZkmktRsaLPj2f4WMH5ihodH4VdlyRsGsCjqXxfUFepnHnEjKjOBxDbRg=s0" class="photo-img" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px; min-height: 160px; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+              <img src="https://lh3.googleusercontent.com/gps-cs-s/APNQkAFNtLaOB5_q2ebxLYqanWobdL8S6miEq66JgBQvw6OKLbP1M2hSXPMCZ5R_9b4DA3AeK2agR-ZIa3_6TYNf8uGjF2bExSMAVnmf6R6aRndkYYaSNQsrBvTKzVNhF6-tFInoBM9u=s0" class="photo-img" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px; min-height: 160px; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4.1. Accommodation Space Section -->
+  <section id="space" class="section dark-section">
+    <div class="container fade-up">
+      <div class="section-header">
+        <h2 class="section-title">Tano Stone Villa 🏡</h2>
+        <p class="section-subtitle">Nằm biệt lập hoàn toàn giữa núi rừng trong khuôn viên rộng rãi 3000m2 cùng bãi cỏ nhung xanh biếc và rừng thông vi vu. Nghỉ dưỡng cùng các tiện ích và thiết bị chuẩn 6 sao ⭐️</p>
+      </div>
+      <div class="space-grid">
+        <div class="space-card">
+          <img src="./villa_imgs/6167794473144881248.jpg" alt="Nhà kính">
+          <div class="space-card-label">Villa nhà kính 4PN (3 phòng đôi, 1 phòng tập thể)</div>
+        </div>
+        <div class="space-card">
+          <img src="./villa_imgs/6167794473144881255.jpg" alt="Bungalow 1">
+          <div class="space-card-label">Bungalow 1 (1 giường 2m2x2m)</div>
+        </div>
+        <div class="space-card">
+          <img src="./villa_imgs/6167794473144881257.jpg" alt="Bungalow 2">
+          <div class="space-card-label">Bungalow 2 (1 giường 2m2x2m)</div>
+        </div>
+        <div class="space-card">
+          <img src="./villa_imgs/6167794473144881260.jpg" alt="Bungalow 3">
+          <div class="space-card-label">Bungalow 3 (1 giường 2m2x2m)</div>
+        </div>
+        <div class="space-card">
+          <img src="./villa_imgs/6167794473144881263.jpg" alt="Phòng tập thể">
+          <div class="space-card-label">Phòng tập thể (2 đệm cạnh hồ bơi)</div>
+        </div>
+        <div class="space-card">
+          <img src="./villa_imgs/6167794473144881245.jpg" alt="Khuôn viên">
+          <div class="space-card-label">Khuôn viên 3000m2 view rừng thông</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4.2. Facilities & Services Section -->
+  <section id="services" class="section dark-section">
+    <div class="container fade-up">
+      <div class="section-header">
+        <h2 class="section-title">Trải Nghiệm Tại Tano Stone 🎯</h2>
+        <p class="section-subtitle">Tiện Ích & Dịch Vụ</p>
+      </div>
+      <div class="services-wrapper">
+        <div class="services-column glass-card">
+          <h3>Tiện Ích Miễn Phí <span class="badge free">FREE</span></h3>
+          <ul class="services-list">
+            <li><span class="icon">🛋️</span> <strong>Phòng khách & Nội thất:</strong> View bể bơi, nội thất xịn mịn, máy lọc nước Kangen siêu cấp, dàn tạ đa năng cho người mê gym, 1 máy massage thư giãn.</li>
+            <li><span class="icon">🏊</span> <strong>Bể bơi:</strong> KHÔNG HÓA CHẤT – công nghệ điện phân muối an toàn cho sức khỏe.</li>
+            <li><span class="icon">🎾</span> <strong>Thể thao:</strong> SÂN PICKLE BALL tiêu chuẩn siêu quốc tế, phủ 11 lớp sơn, êm chân khỏi lo đau xương đau lưng!</li>
+            <li><span class="icon">🎤</span> <strong>Giải trí:</strong> Loa kéo công suất lớn kèm tivi phòng khách.</li>
+            <li><span class="icon">🍖</span> <strong>Bếp & BBQ:</strong> Bếp nướng BBQ trong nhà hoặc ngoài trời, bếp từ, cồn, đồ dùng đầy đủ cho đoàn 30 pax.</li>
+          </ul>
+        </div>
+        <div class="services-column glass-card">
+          <h3>Dịch Vụ Tính Phí <span class="badge paid">CÓ PHÍ</span></h3>
+          <table class="services-table">
+            <thead>
+              <tr>
+                <th>DỊCH VỤ</th>
+                <th>ĐƠN GIÁ</th>
+                <th>GHI CHÚ</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Dọn dẹp bắt buộc</td>
+                <td>400.000đ/đoàn</td>
+                <td>Bao gồm rửa bát tối. Tiêu chuẩn 25 người. Từ người 26: +20k/người.</td>
+              </tr>
+              <tr>
+                <td>Than nướng</td>
+                <td>20.000đ/kg</td>
+                <td>Dùng cho BBQ ngoài trời</td>
+              </tr>
+              <tr>
+                <td>Đá lạnh</td>
+                <td>20.000đ/túi</td>
+                <td>Dùng ướp bia, nước giải khát</td>
+              </tr>
+              <tr>
+                <td>Chèo thuyền Kayak</td>
+                <td>200.000đ/thuyền/giờ</td>
+                <td>Tại hồ Ban Tiện (Liên hệ đặt trước)</td>
+              </tr>
+            </tbody>
+          </table>
+          <div style="margin-top: 25px; padding: 15px; background: rgba(0,0,0,0.2); border-radius: 12px; border-left: 4px solid #eab308; font-size: 0.9rem;">
+            <strong>LƯU Ý QUAN TRỌNG:</strong>
+            <ul style="margin-top: 10px; padding-left: 20px; line-height: 1.5;">
+              <li><strong>Check-in:</strong> 14h00 | <strong>Check-out:</strong> 12h00</li>
+              <li>Tránh sử dụng đồng loạt công suất cao (điều hoà, nóng lạnh, bếp lẩu) gây quá tải điện.</li>
+              <li>Tự bảo quản đồ cá nhân và lưu ý an toàn cho trẻ em ở khu vực ao, hồ bơi.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4.3. Menu Section -->
+  <section id="menu" class="section dark-section">
+    <div class="container fade-up">
+      <div class="section-header">
+        <h2 class="section-title">Menu Ẩm Thực 🍲</h2>
+        <p class="section-subtitle">Thực Đơn</p>
+      </div>
+      <div class="menu-grid">
+        <div class="menu-card glass-card">
+          <div class="menu-img" style="background-image: url('./villa_imgs/6167794473144881258.jpg');">
+            <span class="menu-badge">ĐẶC SẢN NỔI BẬT</span>
+          </div>
+          <div class="menu-info">
+            <h3>Tano Stone BBQ</h3>
+            <ul class="menu-items">
+              <li><strong>Thịt BA CHỈ NƯỚNG than hoa thơm lừng</strong></li>
+              <li><strong>NGÔ NẾP dẻo bùi đỉnh chóp!</strong></li>
+              <li>Salad trộn sốt chanh leo</li>
+              <li>Bánh mì nướng bơ tỏi</li>
+              <li>(Các món khác đang cập nhật thêm...)</li>
+            </ul>
+            <div class="menu-price">Villa nhận nấu ăn & đặt ăn thỏa thuận</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4.5. Gallery Section -->
+  <section id="gallery" class="gallery-section">
+    <div class="container fade-up">
+      <div class="section-header">
+        <h2 class="section-title">Thư Viện Kỷ Niệm 📸</h2>
+        <p class="section-subtitle">Lưu giữ khoảnh khắc đáng nhớ của A3 Badminton</p>
+      </div>
+      <div class="timeline-container" id="gallery-timeline">
+        <!-- JS will populate this with days and photos -->
+        <p style="text-align: center; color: #64748b; font-style: italic;">Chưa có ảnh nào được tải lên. Hãy là người
+          đầu tiên!</p>
+      </div>
+    </div>
+    </div>
+  </section>
+
+  <!-- 5. Members Section -->
+  <section id="members" class="section">
+    <div class="container">
+
+      <!-- Stats Banner -->
+      <div class="stats-banner fade-up">
+        <div class="stat-item">
+          <h3 class="stat-number">16</h3>
+          <p>TỔNG NGƯỜI</p>
+        </div>
+        <div class="stat-item">
+          <h3 class="stat-number">8</h3>
+          <p>PHÒNG Ở</p>
+        </div>
+        <div class="stat-item">
+          <h3 class="stat-number">8</h3>
+          <p>CẶP ĐẤU</p>
+        </div>
+      </div>
+
+      <!-- Tab Menu -->
+      <div class="tabs-menu fade-up delay-1">
+        <button class="tab-btn active" onclick="switchTab('member-list')">Danh sách thành viên</button>
+        <button class="tab-btn" onclick="switchTab('room-list')">Chia phòng</button>
+      </div>
+
+      <!-- Tab Content: Member List (Table) -->
+      <div id="tab-member-list" class="tab-content active fade-up delay-2">
+        <div class="table-container glass-card" style="padding: 0; overflow: hidden;">
+          <div style="overflow-x: auto;">
+            <table class="member-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>HỌ VÀ TÊN</th>
+                  <th>SĐT</th>
+                  <th>DI CHUYỂN</th>
+                  <th>GHI CHÚ</th>
+                </tr>
+              </thead>
+              <tbody id="member-table-body">
+                <!-- Rows injected by JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab Content: Rooms (Grid) -->
+      <div id="tab-room-list" class="tab-content">
+        <div class="members-grid" id="members-grid">
+          <!-- Room cards injected by JS -->
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Footer Section -->
+  <footer id="contact">
+    <div class="container footer-content">
+      <div class="footer-brand">
+        <h2>A3 Badminton.</h2>
+        <p>Câu Lạc Bộ Cầu Lông A3</p>
+      </div>
+      <div class="footer-contact">
+        <h3>Hỗ Trợ Chuyến Đi</h3>
+        <ul>
+          <li>📞 0967 587 296</li>
+          <li>📞 0967 587 296</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 A3 Badminton Event. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Floating Action Buttons (Right) -->
+  <div class="fab-container">
+    <button id="upload-toggle" class="music-btn" onclick="openModal('upload-modal')" title="Đăng ảnh Kỷ niệm">
+      <span class="music-icon" style="color: #fff; display: flex; align-items: center;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+          <circle cx="12" cy="13" r="4"></circle>
+        </svg>
+      </span>
+    </button>
+    <button id="danmaku-toggle" class="music-btn" onclick="toggleDanmaku()" title="Bật/Tắt bong bóng chat">
+      <span class="music-icon" id="danmaku-icon-svg" style="color: #fff; display: flex; align-items: center;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+        </svg>
+      </span>
+    </button>
+    <div id="music-player" class="music-player">
+      <button id="music-toggle" class="music-btn" onclick="toggleMusic()" title="Bật/Tắt nhạc nền">
+        <span class="music-icon" id="music-icon-svg" style="color: #fff; display: flex; align-items: center;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <line x1="23" y1="9" x2="17" y2="15"></line>
+            <line x1="17" y1="9" x2="23" y2="15"></line>
+          </svg>
+        </span>
+      </button>
+      <audio id="bgm" loop>
+        <source
+          src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=piano-moment-9835.mp3"
+          type="audio/mpeg">
+      </audio>
+    </div>
+  </div>
+
+  <!-- Danmaku Container -->
+  <div id="danmaku-container"></div>
+
+  <!-- Floating Toolbar -->
+  <div class="chat-toolbar">
+    <button class="toolbar-btn" onclick="openModal('chat-modal')" title="Gửi lời nhắn">
+      <span class="tb-icon">💬</span> <span class="tb-text">Nhắn tin</span>
+    </button>
+    <button class="toolbar-btn" onclick="openModal('mailbox-modal')" title="Hòm thư kỷ niệm">
+      <span class="tb-icon">📬</span> <span class="tb-text">Hòm thư</span>
+    </button>
+  </div>
+
+  <!-- Chat Modal -->
+  <div id="chat-modal" class="custom-modal">
+    <div class="modal-content glass-card">
+      <span class="close-btn" onclick="closeModal('chat-modal')">&times;</span>
+      <h3 class="modal-title">Gửi Lời Nhắn</h3>
+      <input type="text" id="chat-name" class="chat-input" placeholder="Tên / Biệt danh của bạn" maxlength="20">
+      <input type="text" id="chat-text" class="chat-input" placeholder="Nội dung (tối đa 50 ký tự)" maxlength="50">
+      <div class="emoji-picker">
+        <span onclick="addEmoji('❤️')">❤️</span>
+        <span onclick="addEmoji('😂')">😂</span>
+        <span onclick="addEmoji('🍻')">🍻</span>
+        <span onclick="addEmoji('🏸')">🏸</span>
+        <span onclick="addEmoji('🔥')">🔥</span>
+      </div>
+      <button class="btn-glass w-100" onclick="sendChat()">Gửi</button>
+    </div>
+  </div>
+
+  <!-- Upload Photo Modal -->
+  <div id="upload-modal" class="custom-modal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModal('upload-modal')">&times;</span>
+      <h3 class="modal-title">Góp Ảnh Kỷ Niệm 📷</h3>
+
+      <label for="photo-upload-input" class="upload-area" id="upload-area-label">
+        <div class="upload-icon">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="17 8 12 3 7 8"></polyline>
+            <line x1="12" y1="3" x2="12" y2="15"></line>
+          </svg>
+        </div>
+        <p id="upload-filename">Bấm để chụp hoặc chọn ảnh</p>
+      </label>
+      <!-- Use 'capture="environment"' to default to camera on mobile, but still allow picking -->
+      <input type="file" id="photo-upload-input" accept="image/*" style="display: none;" onchange="updateFileName()">
+
+      <input type="text" id="upload-name" class="chat-input" placeholder="Tên của bạn" maxlength="30" />
+      <input type="text" id="upload-caption" class="chat-input" placeholder="Viết vài dòng kỷ niệm..."
+        maxlength="100" />
+
+      <button class="btn-glass w-100" id="upload-btn" onclick="submitPhoto()">
+        Đăng Ảnh
+      </button>
+    </div>
+  </div>
+
+  <!-- Mailbox Modal -->
+  <div id="mailbox-modal" class="custom-modal">
+    <div class="modal-content glass-card mailbox-content">
+      <span class="close-btn" onclick="closeModal('mailbox-modal')">&times;</span>
+      <h3 class="modal-title" id="mailbox-title" onclick="promptAdmin()">Hòm Thư Kỷ Niệm 📬</h3>
+      <div class="mailbox-list" id="mailbox-list">
+        <!-- Messages injected by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Lightbox -->
+  <div id="lightbox" class="lightbox">
+    <span class="lightbox-close">&times;</span>
+    <img class="lightbox-content" id="lightbox-img">
+  </div>
+
+  <script type="module" src="./main.js"></script>
+</body>
+
+</html>
