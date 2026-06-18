@@ -34,22 +34,28 @@ document.addEventListener('DOMContentLoaded', () => {
   const sections = document.querySelectorAll("section[id]");
   const navLinks = document.querySelectorAll(".nav-links a");
 
+  let lastActive = "";
   window.addEventListener("scroll", () => {
     let current = "";
     sections.forEach(section => {
       const sectionTop = section.offsetTop;
-      const sectionHeight = section.clientHeight;
       if (pageYOffset >= (sectionTop - 300)) {
         current = section.getAttribute("id");
       }
     });
 
-    navLinks.forEach(a => {
-      a.classList.remove("active");
-      if (a.getAttribute("href") === `#${current}`) {
-        a.classList.add("active");
-      }
-    });
+    if (current !== lastActive) {
+      lastActive = current;
+      navLinks.forEach(a => {
+        a.classList.remove("active");
+        if (a.getAttribute("href") === `#${current}`) {
+          a.classList.add("active");
+          if (window.innerWidth <= 768) {
+            a.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+          }
+        }
+      });
+    }
   });
 
   // 1.6. Lightbox functionality
