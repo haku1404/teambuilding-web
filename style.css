@@ -17,6 +17,10 @@
   box-sizing: border-box;
 }
 
+html, body {
+  overflow-x: hidden;
+}
+
 html {
   scroll-behavior: smooth;
   font-family: 'Outfit', sans-serif;
@@ -253,10 +257,10 @@ a {
 /* Weather Widget */
 .weather-widget {
   flex: 1;
-  min-width: 320px;
+  min-width: 250px;
   max-width: 400px;
   margin: 0;
-  padding: 25px 35px;
+  padding: 25px 20px;
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
@@ -855,7 +859,7 @@ a {
 /* --- ACCOMMODATION SPACE --- */
 .space-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 20px;
   margin-top: 40px;
 }
@@ -900,7 +904,7 @@ a {
 }
 .services-column {
   flex: 1;
-  min-width: 300px;
+  min-width: 250px;
   padding: 30px;
   background: rgba(255, 255, 255, 0.92);
 }
@@ -969,7 +973,7 @@ a {
 /* --- MENU --- */
 .menu-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 30px;
   margin-top: 40px;
 }
