@@ -555,8 +555,8 @@ a {
 .deco-2 { top: 35%; right: 8%; animation-delay: 2s; font-size: 4.5rem; }
 .deco-3 { bottom: 30%; left: 6%; animation-delay: 4s; font-size: 4.5rem; }
 .deco-4 { bottom: 10%; right: 10%; animation-delay: 1s; font-size: 3.5rem; }
-.deco-5 { top: 50%; left: 45%; animation-delay: 3s; font-size: 3rem; opacity: 0.4; }
-.deco-6 { top: 15%; right: 25%; animation-delay: 5s; font-size: 3.5rem; }
+.deco-5 { top: 60%; left: 5%; animation-delay: 3s; font-size: 3rem; opacity: 0.8; }
+.deco-6 { top: 40%; right: 5%; animation-delay: 5s; font-size: 3.5rem; }
 
 @keyframes float {
   0%, 100% { transform: translateY(0) rotate(0deg); }
@@ -1542,8 +1542,8 @@ footer {
   .deco-2 { top: 3%; right: 15%; font-size: 2.8rem; }
   .deco-3 { bottom: 2%; left: 20%; font-size: 2.8rem; }
   .deco-4 { bottom: 3%; right: 20%; font-size: 3rem; }
-  .deco-5 { display: none; }
-  .deco-6 { display: none; }
+  .deco-5 { top: 60%; left: 5%; font-size: 2.5rem; display: block; opacity: 0.8; }
+  .deco-6 { top: 40%; right: 5%; font-size: 2.8rem; display: block; opacity: 0.8; }
   
   /* Hero BG */
   .hero-bg { background-attachment: scroll; background-position: center top; }
