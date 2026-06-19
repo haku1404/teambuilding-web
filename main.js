@@ -612,7 +612,7 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.textContent = `Đang nén & tải lên ${uploadedCount + 1}/${files.length}...`;
         
         // Compress image before uploading
-        const compressedFile = await compressImage(file, 1280, 0.75); // Max width 1280px, 75% quality
+        const compressedFile = await compressImage(file, 1920, 0.85); // Max width 1920px (Full HD), 85% quality
         
         // 1. Upload to ImgBB
         const formData = new FormData();
