@@ -225,12 +225,26 @@ document.addEventListener('DOMContentLoaded', () => {
   const statsSection = document.querySelector('.members-stats');
   if(statsSection) statsObserver.observe(statsSection);
 
-  // 4. Mock Data & DOM Injection for Members / Rooms
-  // Render Room List
+  // 3. Render Room List Mock Data
   const mockNames = [
     'Nguyễn Văn A', 'Trần Thị B', 'Lê Văn C', 'Phạm Thị D',
-    'Hoàng Văn E', 'Vũ Thị F', 'Đặng Văn G', 'Bùi Thị H'
+    'Hoàng Văn E', 'Vũ Thị F', 'Đặng Văn G', 'Bùi Thị H',
+    'Ngô Thị I', 'Đỗ Văn K', 'Lý Thị L', 'Đoàn Văn M',
+    'Bùi Văn N', 'Võ Thị O', 'Phan Văn P', 'Lương Thị Q'
   ];
+  let currentNameIndex = 0;
+  
+  const actualRooms = [
+    { name: 'P. Đôi 1 (Villa)', capacity: 2, pin: 'pin-villa' },
+    { name: 'P. Đôi 2 (Villa)', capacity: 2, pin: 'pin-villa' },
+    { name: 'P. Đôi 3 (Villa)', capacity: 2, pin: 'pin-villa' },
+    { name: 'Tập Thể (Villa)', capacity: 4, pin: 'pin-villa' },
+    { name: 'Bungalow 1', capacity: 2, pin: 'pin-bungalow' },
+    { name: 'Bungalow 2', capacity: 2, pin: 'pin-bungalow' },
+    { name: 'Bungalow 3', capacity: 2, pin: 'pin-bungalow' },
+    { name: 'Tập Thể (Hồ Bơi)', capacity: 4, pin: 'pin-pool' }
+  ];
+
   const membersGrid = document.getElementById('members-grid');
 
   if (membersGrid) {
@@ -240,24 +254,27 @@ document.addEventListener('DOMContentLoaded', () => {
           <table class="member-table" style="width: 100%;">
             <thead>
               <tr>
-                <th style="width: 25%;">PHÒNG</th>
+                <th style="width: 30%;">PHÒNG</th>
                 <th style="width: 20%;">SỐ LƯỢNG</th>
                 <th>THÀNH VIÊN</th>
               </tr>
             </thead>
             <tbody>
-              ${Array.from({ length: 8 }, (_, i) => i + 1).map(i => {
-                const numPeople = i <= 4 ? 2 : 4;
+              ${actualRooms.map(room => {
                 const roomMembers = [];
-                for (let j = 0; j < numPeople; j++) {
-                  roomMembers.push(mockNames[Math.floor(Math.random() * mockNames.length)]);
+                for (let j = 0; j < room.capacity; j++) {
+                  roomMembers.push(mockNames[currentNameIndex % mockNames.length]);
+                  currentNameIndex++;
                 }
                 const memberListHtml = roomMembers.map(name => `<span style="display:inline-block; padding: 4px 8px; background: rgba(35, 78, 42, 0.1); border-radius: 4px; margin: 2px;">${name}</span>`).join('');
                 
                 return `
-                  <tr>
-                    <td style="font-weight: 700; color: var(--primary-color);">P10${i}</td>
-                    <td><span class="td-badge" style="background: ${numPeople === 2 ? '#10b981' : '#f59e0b'}; color: white;">${numPeople} Người</span></td>
+                  <tr style="cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.background='transparent'" onclick="highlightMapPin('${room.pin}')">
+                    <td style="font-weight: 700; color: var(--primary-color);">
+                      ${room.name}
+                      <br><small style="color: #64748b; font-weight: normal; text-decoration: underline; font-size: 0.75rem;">📍 Xem trên map</small>
+                    </td>
+                    <td><span class="td-badge" style="background: ${room.capacity === 2 ? '#10b981' : '#f59e0b'}; color: white;">${room.capacity} Người</span></td>
                     <td style="line-height: 1.8;">${memberListHtml}</td>
                   </tr>
                 `;
