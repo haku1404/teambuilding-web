@@ -165,17 +165,48 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   ];
 
+  const checkIsLive = (dateString, timeStr, nextTimeStr) => {
+    const now = new Date();
+    const datePart = dateString.split(' - ')[1];
+    if (!datePart) return false;
+    const [day, month, year] = datePart.split('/');
+    
+    const [startH, startM] = timeStr.split(':').map(Number);
+    const startDate = new Date(year, month - 1, day, startH, startM);
+    
+    let endDate;
+    if (nextTimeStr) {
+      const [endH, endM] = nextTimeStr.split(':').map(Number);
+      endDate = new Date(year, month - 1, day, endH, endM);
+    } else {
+      endDate = new Date(year, month - 1, day, startH + 4, startM); // Assume last event is 4 hours
+    }
+    
+    // DEMO MODE: Bật cờ này thành true để xem thử giao diện "Đang diễn ra" (Fix cứng vào sự kiện 15h Ngày 1)
+    const DEMO_MODE = true;
+    if (DEMO_MODE && dateString.includes('NGÀY 1') && timeStr === '15:00') return true;
+
+    return now >= startDate && now < endDate;
+  };
+
   const journeyGrid = document.getElementById('journey-grid');
   if (journeyGrid) {
     journeyData.forEach((day, idx) => {
       const delay = `delay-${idx + 1}`;
-      const eventsHtml = day.events.map(ev => `
-        <div class="event-item">
-          <span class="event-time">${ev.time}</span>
+      const eventsHtml = day.events.map((ev, evIdx) => {
+        const nextEv = day.events[evIdx + 1];
+        const isLive = checkIsLive(day.dateString, ev.time, nextEv ? nextEv.time : null);
+        
+        return `
+        <div class="event-item ${isLive ? 'is-live' : ''}">
+          <div class="event-time-wrap">
+            <span class="event-time">${ev.time}</span>
+            ${isLive ? '<span class="live-badge">🔥 Đang diễn ra</span>' : ''}
+          </div>
           <h4 class="event-title">${ev.title}</h4>
           ${ev.desc ? `<p class="event-desc">${ev.desc}</p>` : ''}
         </div>
-      `).join('');
+      `}).join('');
 
       const cardHtml = `
         <div class="day-card fade-up ${delay}">
