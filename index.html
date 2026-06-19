@@ -106,12 +106,14 @@
         <h2 class="section-title">Hành Trình Trải Nghiệm</h2>
         <p class="section-desc">2 ngày 1 đêm cháy hết mình cùng đồng đội</p>
       </div>
-      <div class="floating-deco deco-1">🏸</div>
-      <div class="floating-deco deco-2">👟</div>
-      <div class="floating-deco deco-3">🏸</div>
-      <div class="floating-deco deco-4">🏆</div>
-      <div class="floating-deco deco-5">💧</div>
-      <div class="floating-deco deco-6">🏅</div>
+      <div class="floating-decorations">
+        <div class="floating-deco deco-1">🏸</div>
+        <div class="floating-deco deco-2">👟</div>
+        <div class="floating-deco deco-3">🏸</div>
+        <div class="floating-deco deco-4">🏆</div>
+        <div class="floating-deco deco-5">🎾</div>
+        <div class="floating-deco deco-6">🏓</div>
+      </div>
       <div class="journey-grid" id="journey-grid">
         <!-- Cards injected by JS -->
       </div>
@@ -537,6 +539,39 @@
           <!-- Result Text -->
           <div id="wheel-result" style="margin-top: 20px; font-size: 1.5rem; color: #10b981; font-weight: bold; text-align: center; min-height: 35px;"></div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pickleball Rules Modal -->
+  <div id="rules-modal" class="custom-modal">
+    <div class="modal-content glass-card" style="max-width: 600px; text-align: left; padding: 30px;">
+      <span class="close-btn" onclick="closeModal('rules-modal')">&times;</span>
+      <h3 class="modal-title" style="margin-bottom: 20px;">📖 Luật Pickleball (Đánh Đôi)</h3>
+      <div style="font-size: 0.95rem; line-height: 1.6; color: #e2e8f0; max-height: 60vh; overflow-y: auto; padding-right: 10px;">
+        <h4 style="color: var(--primary-color); margin-bottom: 5px;">1. Giao bóng (Serve)</h4>
+        <ul style="margin-bottom: 15px; padding-left: 20px;">
+          <li>Phải giao bóng chéo sân. Cú giao bóng phải là cú đánh dưới tay (vợt tiếp xúc bóng dưới thắt lưng).</li>
+          <li>Khi có điểm, người giao bóng đổi bên (phải sang trái) và giao tiếp. Người nhận không đổi chỗ.</li>
+          <li>Chỉ đội giao bóng mới được ghi điểm.</li>
+        </ul>
+        <h4 style="color: var(--primary-color); margin-bottom: 5px;">2. Luật Hai Lần Nảy (Two-Bounce Rule)</h4>
+        <ul style="margin-bottom: 15px; padding-left: 20px;">
+          <li>Khi bóng được giao, đội nhận phải để bóng nảy 1 lần rồi mới đánh trả.</li>
+          <li>Sau khi đánh trả, đội giao bóng cũng phải để bóng nảy 1 lần rồi mới được đánh tiếp.</li>
+          <li>Sau 2 lần nảy này, cả 2 đội có thể đánh Volley (đánh bóng trên không) thoải mái.</li>
+        </ul>
+        <h4 style="color: var(--primary-color); margin-bottom: 5px;">3. Khu Vực Bếp (Non-Volley Zone / Kitchen)</h4>
+        <ul style="margin-bottom: 15px; padding-left: 20px;">
+          <li>Khu vực 2.1m tính từ lưới gọi là Bếp.</li>
+          <li><strong>Tuyệt đối KHÔNG</strong> được đứng trong Bếp (hoặc đạp vạch Bếp) để đánh Volley (đánh bóng chưa chạm đất).</li>
+          <li>Chỉ được bước vào Bếp khi bóng đã nảy xuống khu vực này.</li>
+        </ul>
+        <h4 style="color: var(--primary-color); margin-bottom: 5px;">4. Cách Tính Điểm</h4>
+        <ul style="padding-left: 20px;">
+          <li>Thường đánh đến 11 điểm, cách biệt 2 điểm để thắng.</li>
+          <li>Xướng điểm gồm 3 số: (Điểm đội mình) - (Điểm đội bạn) - (Lượt giao bóng thứ 1 hay 2). Ví dụ: "3-2-1".</li>
+        </ul>
       </div>
     </div>
   </div>

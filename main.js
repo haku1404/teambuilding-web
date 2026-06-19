@@ -146,7 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
       events: [
         { time: '11:00', title: 'Tập trung & Khởi hành', desc: 'Địa điểm tập trung sẽ cập nhật sau.' },
         { time: '14:00', title: 'Check-in', desc: 'Nhận phòng, cất hành lý và nghỉ ngơi nhẹ.' },
-        { time: '15:00', title: 'Giải Đấu Pickleball', desc: 'Chia cặp và vung vợt tranh tài nảy lửa.' },
+        { time: '15:00', title: 'Giải Đấu Pickleball <span onclick="openModal(\'rules-modal\')" style="font-size: 0.75rem; background: var(--primary-color); color: #fff; padding: 2px 8px; border-radius: 12px; cursor: pointer; margin-left: 8px; vertical-align: middle; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">📖 Xem Luật</span>', desc: 'Chia cặp và vung vợt tranh tài nảy lửa.' },
         { time: '17:30', title: 'Bơi', desc: 'Giải nhiệt tại bể bơi vô cực.' },
         { time: '19:00', title: 'Ăn Tối BBQ & Lẩu', desc: 'Nạp năng lượng với tiệc nướng và lẩu xì xụp.' },
         { time: '21:00', title: 'Game Đêm', desc: 'Xuyên đêm với Ma sói, Poker và các game tập thể.' }
