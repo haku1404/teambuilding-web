@@ -286,6 +286,39 @@ document.addEventListener('DOMContentLoaded', () => {
     `;
   }
 
+  window.highlightMapPin = (pinId) => {
+    // Cuộn lên phần bản đồ
+    const mapSection = document.querySelector('.interactive-map-section');
+    if (mapSection) {
+      mapSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+    
+    // Gỡ highlight tất cả pin
+    const allPins = document.querySelectorAll('.map-pin');
+    allPins.forEach(p => {
+      p.classList.remove('active');
+      p.classList.remove('pin-here');
+    });
+    
+    const tooltip = document.getElementById('mapTooltip');
+    if (tooltip) tooltip.classList.remove('show');
+
+    // Thêm highlight cho pin được chọn
+    const targetPin = document.getElementById(pinId);
+    if (targetPin) {
+      // Delay chút để mượt hơn trong lúc scroll
+      setTimeout(() => {
+        targetPin.classList.add('pin-here');
+        
+        // Tự động tắt highlight sau 5s
+        setTimeout(() => {
+          targetPin.classList.remove('pin-here');
+        }, 5000);
+      }, 500);
+    }
+  };
+
+
   // Render Member List Table
   const membersList = [
     { id: 1, name: 'Nguyễn Văn A', phone: '0987 654 321', travel: '🚗 Xe đoàn', note: 'Dị ứng hải sản' },
