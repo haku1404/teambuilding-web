@@ -777,7 +777,6 @@ a {
   max-width: 900px;
   margin: 0 auto;
   border-radius: 16px;
-  overflow: hidden;
   padding: 10px;
   background: rgba(15, 23, 42, 0.6);
   aspect-ratio: 16 / 9;
