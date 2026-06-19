@@ -154,15 +154,14 @@
           <h3 style="color: #fff; margin-bottom: 20px; font-size: 1.8rem; font-family: 'Cormorant Garamond', serif;">🗺️ Khám Phá Sơ Đồ Resort</h3>
           <p style="color: #cbd5e1; margin-bottom: 20px; font-size: 1rem;">Bấm vào các ghim định vị để xem chi tiết từng khu vực</p>
           <div class="interactive-map-container glass-card">
-            <img class="map-img" src="./interactive_map_landscape.png" alt="Sơ đồ Resort RPG">
+            <img class="map-img" src="./interactive_map_rpg.png" alt="Sơ đồ Resort RPG">
             
             <!-- Map Pins -->
-            <div id="pin-villa" class="map-pin" style="top: 35%; left: 40%;" data-title="Khu Villa Nhà Kính" data-desc="Villa kính 4PN hiện đại, đầy đủ tiện nghi, view ôm trọn rừng thông.">📍</div>
-            <div id="pin-pool" class="map-pin" style="top: 35%; left: 65%;" data-title="Bể Bơi Vô Cực" data-desc="Bể bơi rộng rãi với view ngắm hoàng hôn và núi đồi cực chill.">📍</div>
-            <div id="pin-dorm" class="map-pin" style="top: 40%; left: 85%;" data-title="Phòng Tập Thể" data-desc="Căn nhà gỗ rộng rãi sức chứa lớn, ngay sát cạnh hồ bơi.">📍</div>
-            <div id="pin-bungalow" class="map-pin" style="top: 55%; left: 15%;" data-title="Cụm Bungalow Gỗ" data-desc="3 căn Bungalow gỗ nhỏ nhắn, mái chóp chữ A, thiết kế mộc mạc và riêng tư.">📍</div>
-            <div id="pin-bbq" class="map-pin" style="top: 15%; left: 75%;" data-title="Bãi Cỏ & Khu BBQ" data-desc="Khu vực rộng 3000m2 tuyệt vời để tổ chức tiệc nướng ngoài trời và chơi Teambuilding.">📍</div>
-            <div id="pin-pickleball" class="map-pin" style="top: 75%; left: 70%;" data-title="Sân Pickleball" data-desc="Sân tập Pickleball sắc màu cho team A3 Badminton thỏa sức vung vợt.">📍</div>
+            <div id="pin-villa" class="map-pin" style="top: 35%; left: 65%;" data-title="Khu Villa Nhà Kính" data-desc="Villa kính 4PN hiện đại, đầy đủ tiện nghi, view ôm trọn rừng thông.">📍</div>
+            <div id="pin-pool" class="map-pin" style="top: 50%; left: 85%;" data-title="Bể Bơi Vô Cực" data-desc="Bể bơi rộng rãi với view ngắm hoàng hôn và núi đồi cực chill.">📍</div>
+            <div id="pin-bungalow" class="map-pin" style="top: 50%; left: 25%;" data-title="Cụm Bungalow Gỗ" data-desc="3 căn Bungalow gỗ nhỏ nhắn, mái chóp chữ A, thiết kế mộc mạc và riêng tư.">📍</div>
+            <div id="pin-bbq" class="map-pin" style="top: 30%; left: 25%;" data-title="Bãi Cỏ & Khu BBQ" data-desc="Khu vực rộng 3000m2 tuyệt vời để tổ chức tiệc nướng ngoài trời và chơi Teambuilding.">📍</div>
+            <div id="pin-pickleball" class="map-pin" style="top: 70%; left: 65%;" data-title="Sân Pickleball" data-desc="Sân tập Pickleball sắc màu cho team A3 Badminton thỏa sức vung vợt.">📍</div>
             
             <!-- Tooltip -->
             <div class="map-tooltip" id="mapTooltip">
@@ -399,6 +398,11 @@
 
   <!-- Floating Action Buttons (Right) -->
   <div class="fab-container">
+    <button id="wheel-toggle" class="music-btn" onclick="openModal('wheel-modal')" title="Vòng Quay May Mắn">
+      <span class="music-icon" style="color: #fff; display: flex; align-items: center; font-size: 1.2rem;">
+        🎡
+      </span>
+    </button>
     <button id="upload-toggle" class="music-btn" onclick="openModal('upload-modal')" title="Đăng ảnh Kỷ niệm">
       <span class="music-icon" style="color: #fff; display: flex; align-items: center;">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -503,6 +507,36 @@
       <h3 class="modal-title" id="mailbox-title" onclick="promptAdmin()">Hòm Thư Kỷ Niệm 📬</h3>
       <div class="mailbox-list" id="mailbox-list">
         <!-- Messages injected by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Wheel of Names Modal -->
+  <div id="wheel-modal" class="custom-modal">
+    <div class="modal-content glass-card" style="max-width: 800px; width: 95%;">
+      <span class="close-btn" onclick="closeModal('wheel-modal')">&times;</span>
+      <h3 class="modal-title">🎡 Vòng Quay May Mắn</h3>
+      <div class="wheel-layout" style="display: flex; flex-wrap: wrap; gap: 20px;">
+        <!-- Left: Input & Controls -->
+        <div class="wheel-left" style="flex: 1; min-width: 250px; display: flex; flex-direction: column; gap: 10px;">
+          <textarea id="wheel-names" class="chat-input" rows="8" style="height: 200px; resize: vertical;" placeholder="Nhập tên người chơi (mỗi dòng 1 người)" oninput="drawWheel()"></textarea>
+          <div style="display: flex; gap: 10px;">
+            <button class="btn-glass" onclick="shuffleNames()" style="flex: 1; padding: 10px;">🔀 Trộn</button>
+            <button class="btn-glass" onclick="multiplyNames()" style="flex: 1; padding: 10px;">✖️ Nhân đôi</button>
+          </div>
+          <button class="btn-glass" onclick="spinWheel()" style="background: var(--primary-color); font-weight: bold; font-size: 1.2rem; padding: 12px; margin-top: auto;">SPIN!</button>
+          <button id="remove-winner-btn" class="btn-glass" onclick="removeWinner()" style="display: none; background: #ef4444; margin-top: 10px;">🗑️ Xóa người vừa trúng</button>
+        </div>
+        <!-- Right: Wheel Canvas -->
+        <div class="wheel-right" style="flex: 1; min-width: 280px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative;">
+          <div style="position: relative; width: 100%; max-width: 350px; aspect-ratio: 1;">
+            <canvas id="wheel-canvas" width="400" height="400" style="width: 100%; height: 100%; border-radius: 50%; box-shadow: 0 0 15px rgba(0,0,0,0.3); transition: transform cubic-bezier(0.17, 0.67, 0.1, 1);"></canvas>
+            <!-- Pointer Arrow -->
+            <div style="position: absolute; top: -10px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 30px solid #ef4444; z-index: 10; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));"></div>
+          </div>
+          <!-- Result Text -->
+          <div id="wheel-result" style="margin-top: 20px; font-size: 1.5rem; color: #10b981; font-weight: bold; text-align: center; min-height: 35px;"></div>
+        </div>
       </div>
     </div>
   </div>

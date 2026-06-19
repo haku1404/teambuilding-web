@@ -242,7 +242,7 @@ document.addEventListener('DOMContentLoaded', () => {
     { name: 'Bungalow 1', capacity: 2, pin: 'pin-bungalow' },
     { name: 'Bungalow 2', capacity: 2, pin: 'pin-bungalow' },
     { name: 'Bungalow 3', capacity: 2, pin: 'pin-bungalow' },
-    { name: 'Tập Thể (Hồ Bơi)', capacity: 4, pin: 'pin-dorm' }
+    { name: 'Tập Thể (Hồ Bơi)', capacity: 4, pin: 'pin-pool' }
   ];
 
   const membersGrid = document.getElementById('members-grid');
@@ -832,6 +832,169 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     container.innerHTML = html;
+  };
+
+  // --- Wheel of Names Logic ---
+  const colors = ['#f43f5e', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316'];
+  let currentRotation = 0;
+  let isSpinning = false;
+  let currentWinner = '';
+
+  window.drawWheel = () => {
+    const canvas = document.getElementById('wheel-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const textarea = document.getElementById('wheel-names');
+    
+    // Init default if empty
+    if (textarea && textarea.value.trim() === '') {
+      textarea.value = mockNames.join('\n');
+    }
+
+    let names = [];
+    if (textarea) {
+      names = textarea.value.split('\n').map(n => n.trim()).filter(n => n.length > 0);
+    }
+    if (names.length === 0) names = ['Trống'];
+    
+    window.wheelNames = names;
+    
+    const numSegments = names.length;
+    const arc = Math.PI * 2 / numSegments;
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+    const radius = centerX;
+    
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    for (let i = 0; i < numSegments; i++) {
+      const angle = i * arc;
+      
+      ctx.beginPath();
+      ctx.fillStyle = colors[i % colors.length];
+      ctx.moveTo(centerX, centerY);
+      ctx.arc(centerX, centerY, radius, angle, angle + arc, false);
+      ctx.lineTo(centerX, centerY);
+      ctx.fill();
+      
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      
+      ctx.save();
+      ctx.translate(centerX, centerY);
+      ctx.rotate(angle + arc / 2);
+      ctx.textAlign = 'right';
+      ctx.fillStyle = '#fff';
+      ctx.font = 'bold 18px "Outfit", sans-serif';
+      ctx.shadowColor = 'rgba(0,0,0,0.5)';
+      ctx.shadowBlur = 4;
+      ctx.shadowOffsetX = 1;
+      ctx.shadowOffsetY = 1;
+      ctx.fillText(names[i], radius - 20, 6);
+      ctx.restore();
+    }
+    
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, 15, 0, Math.PI * 2);
+    ctx.fillStyle = '#ffffff';
+    ctx.fill();
+    ctx.shadowBlur = 0;
+  };
+
+  window.spinWheel = () => {
+    if (isSpinning || !window.wheelNames || window.wheelNames.length === 0) return;
+    isSpinning = true;
+    
+    const canvas = document.getElementById('wheel-canvas');
+    const resultDiv = document.getElementById('wheel-result');
+    const removeBtn = document.getElementById('remove-winner-btn');
+    
+    resultDiv.textContent = 'Đang quay...';
+    resultDiv.style.color = '#cbd5e1';
+    resultDiv.style.transition = 'transform 0.3s';
+    removeBtn.style.display = 'none';
+    
+    const spinSpins = 5 + Math.floor(Math.random() * 5); // 5 to 10 full spins
+    const randomDegrees = Math.floor(Math.random() * 360);
+    const totalDegrees = spinSpins * 360 + randomDegrees;
+    
+    currentRotation += totalDegrees;
+    
+    canvas.style.transition = 'transform 4s cubic-bezier(0.17, 0.67, 0.1, 1)';
+    canvas.style.transform = `rotate(${currentRotation}deg)`;
+    
+    setTimeout(() => {
+      isSpinning = false;
+      
+      const numSegments = window.wheelNames.length;
+      const degreesPerSegment = 360 / numSegments;
+      const normalizedRot = currentRotation % 360;
+      
+      // Pointer is at top (270 deg)
+      const topAngle = (270 - normalizedRot + 360) % 360;
+      const winnerIndex = Math.floor(topAngle / degreesPerSegment);
+      
+      currentWinner = window.wheelNames[winnerIndex];
+      resultDiv.textContent = `🎉 ${currentWinner} 🎉`;
+      resultDiv.style.color = '#10b981';
+      removeBtn.style.display = 'block';
+      
+      resultDiv.style.transform = 'scale(1.2)';
+      setTimeout(() => resultDiv.style.transform = 'scale(1)', 300);
+      
+    }, 4000);
+  };
+
+  window.shuffleNames = () => {
+    const textarea = document.getElementById('wheel-names');
+    if (!textarea) return;
+    let names = textarea.value.split('\n').map(n => n.trim()).filter(n => n.length > 0);
+    names.sort(() => Math.random() - 0.5);
+    textarea.value = names.join('\n');
+    window.drawWheel();
+  };
+
+  window.multiplyNames = () => {
+    const textarea = document.getElementById('wheel-names');
+    if (!textarea) return;
+    let names = textarea.value.split('\n').map(n => n.trim()).filter(n => n.length > 0);
+    if (names.length > 0) {
+      names = [...names, ...names];
+      textarea.value = names.join('\n');
+      window.drawWheel();
+    }
+  };
+
+  window.removeWinner = () => {
+    const textarea = document.getElementById('wheel-names');
+    const resultDiv = document.getElementById('wheel-result');
+    const removeBtn = document.getElementById('remove-winner-btn');
+    
+    if (!textarea || !currentWinner) return;
+    
+    let names = textarea.value.split('\n').map(n => n.trim()).filter(n => n.length > 0);
+    const index = names.indexOf(currentWinner);
+    if (index > -1) {
+      names.splice(index, 1);
+      textarea.value = names.join('\n');
+      window.drawWheel();
+    }
+    
+    resultDiv.textContent = '';
+    removeBtn.style.display = 'none';
+    currentWinner = '';
+  };
+
+  // Draw wheel initially if modal is opened
+  // Móc sự kiện openModal để drawWheel
+  const originalOpenModal = window.openModal;
+  window.openModal = (modalId) => {
+    originalOpenModal(modalId);
+    if (modalId === 'wheel-modal') {
+      // Delay chút để DOM render hiển thị rõ kích thước canvas
+      setTimeout(() => window.drawWheel(), 100);
+    }
   };
 
 });
