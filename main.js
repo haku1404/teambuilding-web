@@ -516,28 +516,76 @@ document.addEventListener('DOMContentLoaded', () => {
     const previewArea = document.getElementById('upload-area-label');
     
     if (input.files && input.files.length > 0) {
-      const file = input.files[0];
-      label.textContent = "Đã chọn: " + file.name;
-      
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        previewArea.style.backgroundImage = `url('${e.target.result}')`;
-        previewArea.style.backgroundSize = 'cover';
-        previewArea.style.backgroundPosition = 'center';
-        previewArea.querySelector('.upload-icon').style.display = 'none';
-        label.style.background = 'rgba(255,255,255,0.85)';
-        label.style.padding = '4px 8px';
-        label.style.borderRadius = '6px';
-        label.style.color = '#1e293b';
-        label.style.fontWeight = '600';
+      if (input.files.length === 1) {
+        const file = input.files[0];
+        label.textContent = "Đã chọn: " + file.name;
+        
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          previewArea.style.backgroundImage = `url('${e.target.result}')`;
+          previewArea.style.backgroundSize = 'cover';
+          previewArea.style.backgroundPosition = 'center';
+          previewArea.querySelector('.upload-icon').style.display = 'none';
+          label.style.background = 'rgba(255,255,255,0.85)';
+          label.style.padding = '4px 8px';
+          label.style.borderRadius = '6px';
+          label.style.color = '#1e293b';
+          label.style.fontWeight = '600';
+        }
+        reader.readAsDataURL(file);
+      } else {
+        // Multiple files selected
+        label.textContent = `Đã chọn ${input.files.length} ảnh`;
+        previewArea.style.backgroundImage = 'none';
+        previewArea.querySelector('.upload-icon').style.display = 'block';
+        label.style.background = 'rgba(16, 185, 129, 0.9)'; // Green badge
+        label.style.padding = '4px 12px';
+        label.style.borderRadius = '20px';
+        label.style.color = '#fff';
+        label.style.fontWeight = '700';
       }
-      reader.readAsDataURL(file);
     } else {
       label.textContent = "Bấm để chụp hoặc chọn ảnh";
       previewArea.style.backgroundImage = 'none';
       previewArea.querySelector('.upload-icon').style.display = 'block';
       label.style.background = 'transparent';
+      label.style.color = '#cbd5e1';
+      label.style.fontWeight = '400';
     }
+  };
+
+  // Image compression utility using Canvas
+  const compressImage = (file, maxWidth = 1920, quality = 0.8) => {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        const img = new Image();
+        img.onload = function() {
+          let width = img.width;
+          let height = img.height;
+          
+          if (width > maxWidth) {
+            height = Math.round(height * (maxWidth / width));
+            width = maxWidth;
+          }
+          
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+          
+          canvas.toBlob((blob) => {
+            resolve(new File([blob], file.name, {
+              type: 'image/jpeg',
+              lastModified: Date.now()
+            }));
+          }, 'image/jpeg', quality);
+        };
+        img.src = event.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
   };
 
   window.submitPhoto = async () => {
@@ -546,47 +594,56 @@ document.addEventListener('DOMContentLoaded', () => {
     const captionInput = document.getElementById('upload-caption');
     const btn = document.getElementById('upload-btn');
 
-    const file = fileInput.files[0];
+    const files = Array.from(fileInput.files);
     let name = nameInput.value.trim();
     const caption = captionInput.value.trim();
 
-    if (!file) {
-      alert("Vui lòng chọn hoặc chụp một bức ảnh!");
+    if (files.length === 0) {
+      alert("Vui lòng chọn hoặc chụp ít nhất một bức ảnh!");
       return;
     }
     if (!name) name = "Thành viên A3"; // Auto-fallback so it doesn't block
 
-    btn.textContent = "Đang tải lên...";
     btn.disabled = true;
+    let uploadedCount = 0;
 
     try {
-      // 1. Upload to ImgBB
-      const formData = new FormData();
-      formData.append('image', file);
-      
-      const imgbbRes = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
-        method: 'POST',
-        body: formData
-      });
-      const imgbbData = await imgbbRes.json();
-      
-      if (!imgbbData.success) throw new Error("Upload failed");
-      
-      const imageUrl = imgbbData.data.url;
+      for (let file of files) {
+        btn.textContent = `Đang nén & tải lên ${uploadedCount + 1}/${files.length}...`;
+        
+        // Compress image before uploading
+        const compressedFile = await compressImage(file, 1280, 0.75); // Max width 1280px, 75% quality
+        
+        // 1. Upload to ImgBB
+        const formData = new FormData();
+        formData.append('image', compressedFile);
+        
+        const imgbbRes = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
+          method: 'POST',
+          body: formData
+        });
+        const imgbbData = await imgbbRes.json();
+        
+        if (!imgbbData.success) throw new Error(`Upload failed for ${file.name}`);
+        
+        const imageUrl = imgbbData.data.url;
 
-      // 2. Save to Firebase RTDB
-      const photoData = {
-        name: name,
-        caption: caption,
-        url: imageUrl,
-        date: new Date().toLocaleDateString('vi-VN'),
-        timestamp: Date.now()
-      };
+        // 2. Save to Firebase RTDB
+        const photoData = {
+          name: name,
+          caption: caption,
+          url: imageUrl,
+          date: new Date().toLocaleDateString('vi-VN'),
+          timestamp: Date.now()
+        };
 
-      const newPhotoRef = push(galleryRef);
-      await set(newPhotoRef, photoData);
+        const newPhotoRef = push(galleryRef);
+        await set(newPhotoRef, photoData);
+        
+        uploadedCount++;
+      }
 
-      alert("Ảnh đã được tải lên thành công!");
+      alert(`Tuyệt vời! Đã tải lên thành công ${uploadedCount} ảnh! 🚀`);
       
       // Reset UI
       fileInput.value = "";
@@ -595,11 +652,13 @@ document.addEventListener('DOMContentLoaded', () => {
       const previewArea = document.getElementById('upload-area-label');
       previewArea.style.backgroundImage = 'none';
       previewArea.querySelector('.upload-icon').style.display = 'block';
-      document.getElementById('upload-filename').style.background = 'transparent';
-      document.getElementById('upload-filename').textContent = "Bấm để chụp hoặc chọn ảnh";
+      const label = document.getElementById('upload-filename');
+      label.style.background = 'transparent';
+      label.style.color = '#cbd5e1';
+      label.style.fontWeight = '400';
+      label.textContent = "Bấm để chụp hoặc chọn ảnh";
       
       closeModal('upload-modal');
-      
     } catch (err) {
       console.error(err);
       alert("Lỗi kết nối mạng, vui lòng thử lại!");
