@@ -242,7 +242,7 @@ document.addEventListener('DOMContentLoaded', () => {
     { name: 'Bungalow 1', capacity: 2, pin: 'pin-bungalow' },
     { name: 'Bungalow 2', capacity: 2, pin: 'pin-bungalow' },
     { name: 'Bungalow 3', capacity: 2, pin: 'pin-bungalow' },
-    { name: 'Tập Thể (Hồ Bơi)', capacity: 4, pin: 'pin-pool' }
+    { name: 'Tập Thể (Hồ Bơi)', capacity: 4, pin: 'pin-dorm' }
   ];
 
   const membersGrid = document.getElementById('members-grid');
