@@ -1083,6 +1083,15 @@ document.addEventListener('DOMContentLoaded', () => {
           zIndex: 99999
         });
       }
+
+      // Show Winner Popup
+      setTimeout(() => {
+        const winnerDisplay = document.getElementById('winner-name-display');
+        if (winnerDisplay) {
+          winnerDisplay.textContent = currentWinner;
+          window.openModal('winner-modal');
+        }
+      }, 500);
       
     }, 4000);
   };
