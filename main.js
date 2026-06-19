@@ -92,6 +92,34 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // 1.7. Interactive Map Logic
+  const mapPins = document.querySelectorAll('.map-pin');
+  const mapTooltip = document.getElementById('mapTooltip');
+  const tooltipTitle = document.getElementById('tooltipTitle');
+  const tooltipDesc = document.getElementById('tooltipDesc');
+
+  if (mapPins.length > 0 && mapTooltip) {
+    mapPins.forEach(pin => {
+      pin.addEventListener('click', (e) => {
+        e.stopPropagation();
+        
+        tooltipTitle.textContent = pin.getAttribute('data-title');
+        tooltipDesc.textContent = pin.getAttribute('data-desc');
+        
+        mapTooltip.classList.add('show');
+        mapPins.forEach(p => p.classList.remove('active'));
+        pin.classList.add('active');
+      });
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!e.target.classList.contains('map-pin') && !e.target.closest('.map-tooltip')) {
+        mapTooltip.classList.remove('show');
+        mapPins.forEach(p => p.classList.remove('active'));
+      }
+    });
+  }
+
   // 2. Intersection Observer for Fade-up animations
   const observerOptions = {
     root: null,

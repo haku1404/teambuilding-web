@@ -148,6 +148,28 @@
             </div>
           </div>
         </div>
+        
+        <!-- Interactive Map Section -->
+        <div class="interactive-map-section fade-up" style="margin-top: 50px; text-align: center;">
+          <h3 style="color: #fff; margin-bottom: 20px; font-size: 1.8rem; font-family: 'Cormorant Garamond', serif;">🗺️ Khám Phá Sơ Đồ Resort</h3>
+          <p style="color: #cbd5e1; margin-bottom: 20px; font-size: 1rem;">Bấm vào các ghim định vị để xem chi tiết từng khu vực</p>
+          <div class="interactive-map-container glass-card" style="position: relative; max-width: 900px; margin: 0 auto; border-radius: 16px; overflow: hidden; padding: 10px; background: rgba(15, 23, 42, 0.6);">
+            <img src="./interactive_map.png" alt="Sơ đồ Resort" style="width: 100%; height: auto; display: block; border-radius: 12px; user-select: none;">
+            
+            <!-- Map Pins -->
+            <div class="map-pin" style="top: 25%; left: 25%;" data-title="Khu Villa Nhà Kính" data-desc="Villa kính 4PN hiện đại, đầy đủ tiện nghi, view ôm trọn rừng thông.">📍</div>
+            <div class="map-pin" style="top: 45%; left: 30%;" data-title="Bể Bơi Vô Cực" data-desc="Bể bơi rộng rãi với view ngắm hoàng hôn và núi đồi cực chill.">📍</div>
+            <div class="map-pin" style="top: 25%; left: 70%;" data-title="Cụm Bungalow Gỗ" data-desc="3 căn Bungalow gỗ nhỏ nhắn, mái chóp chữ A, thiết kế mộc mạc và riêng tư.">📍</div>
+            <div class="map-pin" style="top: 65%; left: 45%;" data-title="Bãi Cỏ & Khu BBQ" data-desc="Khu vực rộng 3000m2 tuyệt vời để tổ chức tiệc nướng ngoài trời và chơi Teambuilding.">📍</div>
+            <div class="map-pin" style="top: 75%; left: 75%;" data-title="Sân Pickleball" data-desc="Sân tập Pickleball sắc màu cho team A3 Badminton thỏa sức vung vợt.">📍</div>
+            
+            <!-- Tooltip -->
+            <div class="map-tooltip" id="mapTooltip">
+              <h4 id="tooltipTitle">Tên Khu Vực</h4>
+              <p id="tooltipDesc">Mô tả chi tiết</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
