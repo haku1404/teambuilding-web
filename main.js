@@ -902,6 +902,23 @@ document.addEventListener('DOMContentLoaded', () => {
     ctx.shadowBlur = 0;
   };
 
+  const playTickSound = () => {
+    try {
+      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = audioCtx.createOscillator();
+      const gainNode = audioCtx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(1000, audioCtx.currentTime + 0.03);
+      gainNode.gain.setValueAtTime(0.15, audioCtx.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.03);
+      osc.connect(gainNode);
+      gainNode.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.03);
+    } catch(e) {}
+  };
+
   window.spinWheel = () => {
     if (isSpinning || !window.wheelNames || window.wheelNames.length === 0) return;
     isSpinning = true;
@@ -914,6 +931,21 @@ document.addEventListener('DOMContentLoaded', () => {
     resultDiv.style.color = '#cbd5e1';
     resultDiv.style.transition = 'transform 0.3s';
     removeBtn.style.display = 'none';
+    
+    // Play tick sounds with decreasing speed
+    let tickCount = 0;
+    const maxTicks = 35;
+    const tickInterval = () => {
+      if (!isSpinning) return;
+      playTickSound();
+      tickCount++;
+      if (tickCount < maxTicks) {
+        // Tốc độ chậm dần (delay tăng dần)
+        const delay = 30 + Math.pow(tickCount, 1.8);
+        setTimeout(tickInterval, delay);
+      }
+    };
+    tickInterval();
     
     const spinSpins = 5 + Math.floor(Math.random() * 5); // 5 to 10 full spins
     const randomDegrees = Math.floor(Math.random() * 360);
@@ -942,6 +974,24 @@ document.addEventListener('DOMContentLoaded', () => {
       
       resultDiv.style.transform = 'scale(1.2)';
       setTimeout(() => resultDiv.style.transform = 'scale(1)', 300);
+      
+      // Play cheer sound
+      const cheerAudio = document.getElementById('wheel-cheer');
+      if (cheerAudio) {
+        cheerAudio.currentTime = 0;
+        cheerAudio.volume = 0.6;
+        cheerAudio.play().catch(e => console.log('Audio play failed', e));
+      }
+
+      // Trigger Confetti
+      if (window.confetti) {
+        window.confetti({
+          particleCount: 150,
+          spread: 80,
+          origin: { y: 0.6 },
+          zIndex: 99999
+        });
+      }
       
     }, 4000);
   };
