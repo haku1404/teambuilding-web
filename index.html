@@ -576,6 +576,25 @@
     </div>
   </div>
 
+  <!-- Winner Modal -->
+  <div id="winner-modal" class="custom-modal" style="z-index: 2001;">
+    <div class="modal-content glass-card" style="text-align: center; padding: 40px 20px; background: rgba(255, 255, 255, 0.95); animation: zoomIn 0.5s cubic-bezier(0.17, 0.67, 0.1, 1);">
+      <span class="close-btn" onclick="closeModal('winner-modal')" style="top: 10px; right: 15px; font-size: 2rem;">&times;</span>
+      <h2 style="font-size: 2rem; color: #1e293b; margin-bottom: 10px;">🎉 Chúc Mừng 🎉</h2>
+      <p style="font-size: 1.2rem; color: #64748b; margin-bottom: 20px;">Người may mắn được xướng tên là:</p>
+      <div id="winner-name-display" style="font-size: 2.5rem; font-weight: 800; color: #ef4444; background: rgba(239, 68, 68, 0.1); padding: 15px 20px; border-radius: 16px; border: 2px dashed #ef4444; display: inline-block; word-break: break-word;">Tên Người Trúng</div>
+      <br>
+      <button class="btn-glass" onclick="closeModal('winner-modal')" style="margin-top: 30px; background: var(--primary-color); padding: 10px 30px; font-size: 1.1rem; font-weight: 600;">Tuyệt vời!</button>
+    </div>
+  </div>
+  
+  <style>
+    @keyframes zoomIn {
+      0% { transform: scale(0.5); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+  </style>
+
   <!-- Lightbox -->
   <div id="lightbox" class="lightbox">
     <span class="lightbox-close">&times;</span>
