@@ -1083,15 +1083,6 @@ document.addEventListener('DOMContentLoaded', () => {
           zIndex: 99999
         });
       }
-
-      // Show Winner Modal
-      setTimeout(() => {
-        const winnerDisplay = document.getElementById('winner-name-display');
-        if (winnerDisplay) {
-          winnerDisplay.textContent = currentWinner;
-          document.getElementById('winner-modal').classList.add('show');
-        }
-      }, 500); // Short delay after stopping to let them see the wheel pointer
       
     }, 4000);
   };

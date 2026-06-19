@@ -532,7 +532,9 @@
         <!-- Right: Wheel Canvas -->
         <div class="wheel-right" style="flex: 1; min-width: 280px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative;">
           <div style="position: relative; width: 100%; max-width: 350px; aspect-ratio: 1;">
-            <canvas id="wheel-canvas" width="400" height="400" style="width: 100%; height: 100%; border-radius: 50%; box-shadow: 0 0 15px rgba(0,0,0,0.3); transition: transform cubic-bezier(0.17, 0.67, 0.1, 1);"></canvas>
+            <div style="width: 100%; height: 100%; border-radius: 50%; overflow: hidden; box-shadow: 0 0 15px rgba(0,0,0,0.3); z-index: 1; transform: translateZ(0);">
+              <canvas id="wheel-canvas" width="400" height="400" style="width: 100%; height: 100%; display: block; transform-origin: center center; transition: transform cubic-bezier(0.17, 0.67, 0.1, 1);"></canvas>
+            </div>
             <!-- Pointer Arrow -->
             <div style="position: absolute; top: -10px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 30px solid #ef4444; z-index: 10; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));"></div>
           </div>
@@ -575,25 +577,6 @@
       </div>
     </div>
   </div>
-
-  <!-- Winner Modal -->
-  <div id="winner-modal" class="custom-modal" style="z-index: 2001;">
-    <div class="modal-content glass-card" style="text-align: center; padding: 40px 20px; background: rgba(255, 255, 255, 0.95); animation: zoomIn 0.5s cubic-bezier(0.17, 0.67, 0.1, 1);">
-      <span class="close-btn" onclick="closeModal('winner-modal')" style="top: 10px; right: 15px; font-size: 2rem;">&times;</span>
-      <h2 style="font-size: 2rem; color: #1e293b; margin-bottom: 10px;">🎉 Chúc Mừng 🎉</h2>
-      <p style="font-size: 1.2rem; color: #64748b; margin-bottom: 20px;">Người may mắn được xướng tên là:</p>
-      <div id="winner-name-display" style="font-size: 2.5rem; font-weight: 800; color: #ef4444; background: rgba(239, 68, 68, 0.1); padding: 15px 20px; border-radius: 16px; border: 2px dashed #ef4444; display: inline-block; word-break: break-word;">Tên Người Trúng</div>
-      <br>
-      <button class="btn-glass" onclick="closeModal('winner-modal')" style="margin-top: 30px; background: var(--primary-color); padding: 10px 30px; font-size: 1.1rem; font-weight: 600;">Tuyệt vời!</button>
-    </div>
-  </div>
-  
-  <style>
-    @keyframes zoomIn {
-      0% { transform: scale(0.5); opacity: 0; }
-      100% { transform: scale(1); opacity: 1; }
-    }
-  </style>
 
   <!-- Lightbox -->
   <div id="lightbox" class="lightbox">
