@@ -142,24 +142,25 @@ document.addEventListener('DOMContentLoaded', () => {
     {
       dateString: 'NGÀY 1 - 11/07/2026',
       dayName: 'Thứ Bảy',
-      theme: 'Khởi Hành Kết Nối',
+      theme: 'Let\'s Gooo',
       events: [
-        { time: '06:00', title: 'Tập Hợp Quân Số', desc: 'Tập trung tại sân A3, xếp vợt lên xe.' },
-        { time: '08:30', title: 'Check-in Làng Ghibli', desc: 'Đến nơi, nhận phòng gỗ xinh xắn, cất hành lý.' },
-        { time: '10:00', title: 'Khởi Động Sương Sương', desc: 'Tham gia các trò chơi mini-game khởi động nhẹ nhàng.' },
-        { time: '11:30', title: 'Nạp Năng Lượng', desc: 'Ăn trưa tại nhà hàng sinh thái, nghỉ ngơi.' },
-        { time: '14:00 - 17:00', title: 'Giải Đấu "Đập Là Chết"', desc: 'Bốc thăm chia cặp đánh đôi nội bộ.' },
-        { time: '18:30', title: 'Gala Dinner & Trao Giải', desc: 'Tiệc BBQ ngoài trời, lửa trại bập bùng.' }
+        { time: '11:00', title: 'Tập trung & Khởi hành', desc: 'Địa điểm tập trung sẽ cập nhật sau.' },
+        { time: '14:00', title: 'Check-in', desc: 'Nhận phòng, cất hành lý và nghỉ ngơi nhẹ.' },
+        { time: '15:00', title: 'Giải Đấu Pickleball', desc: 'Chia cặp và vung vợt tranh tài nảy lửa.' },
+        { time: '17:30', title: 'Bơi', desc: 'Giải nhiệt tại bể bơi vô cực.' },
+        { time: '19:00', title: 'Ăn Tối BBQ & Lẩu', desc: 'Nạp năng lượng với tiệc nướng và lẩu xì xụp.' },
+        { time: '21:00', title: 'Game Đêm', desc: 'Xuyên đêm với Ma sói, Poker và các game tập thể.' }
       ]
     },
     {
       dateString: 'NGÀY 2 - 12/07/2026',
       dayName: 'Chủ Nhật',
-      theme: 'Trọn Vẹn Niềm Vui',
+      theme: 'Tự Do Thư Giãn',
       events: [
-        { time: '08:00 - 09:30', title: 'Ăn Sáng & Cà Phê', desc: 'Thưởng thức buffet sáng ngắm cảnh rừng.' },
-        { time: '10:00', title: 'Tự Do Thư Giãn', desc: 'Tự do đi dạo, chụp ảnh sống ảo, đạp xe.' },
-        { time: '11:30', title: 'Check out & Tạm Biệt', desc: 'Trả phòng, ăn trưa nhẹ và lên xe trở về.' }
+        { time: '08:00', title: 'Dậy Xem World Cup', desc: 'Hô vang cổ vũ cùng anh em đam mê bóng đá.' },
+        { time: '09:00', title: 'Lịch Trình Tự Do', desc: 'Tự do đi dạo, chụp ảnh sống ảo, tận hưởng không khí.' },
+        { time: '11:30', title: 'Check out', desc: 'Dọn phòng và làm thủ tục trả phòng.' },
+        { time: '12:30', title: 'Ăn Trưa & Trở Về', desc: 'Ăn trưa nhẹ nhàng, lên xe quay về thành phố.' }
       ]
     }
   ];
