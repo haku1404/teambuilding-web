@@ -183,7 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     // DEMO MODE: Bật cờ này thành true để xem thử giao diện "Đang diễn ra" (Fix cứng vào sự kiện 15h Ngày 1)
-    const DEMO_MODE = true;
+    const DEMO_MODE = false;
     if (DEMO_MODE && dateString.includes('NGÀY 1') && timeStr === '15:00') return true;
 
     return now >= startDate && now < endDate;
