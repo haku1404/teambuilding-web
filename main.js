@@ -1450,6 +1450,120 @@ document.addEventListener('DOMContentLoaded', () => {
     link.download = `a3-photobooth-${Date.now()}.png`;
     link.href = dataURL;
     link.click();
+    
+    // Lưu vào Album (IndexedDB)
+    saveToAlbum(dataURL);
+    alert("Ảnh đã được tải xuống và lưu vào Album của bạn!");
+  };
+
+  // --- IndexedDB cho Photobooth Album ---
+  const dbName = 'A3PhotoboothDB';
+  const storeName = 'gallery';
+  let dbPromise = null;
+
+  const initDB = () => {
+    if (!dbPromise) {
+      dbPromise = new Promise((resolve, reject) => {
+        const request = indexedDB.open(dbName, 1);
+        request.onupgradeneeded = (e) => {
+          const db = e.target.result;
+          if (!db.objectStoreNames.contains(storeName)) {
+            db.createObjectStore(storeName, { keyPath: 'id', autoIncrement: true });
+          }
+        };
+        request.onsuccess = (e) => resolve(e.target.result);
+        request.onerror = (e) => reject(e.target.error);
+      });
+    }
+    return dbPromise;
+  };
+
+  const saveToAlbum = async (dataUrl) => {
+    try {
+      const db = await initDB();
+      const tx = db.transaction(storeName, 'readwrite');
+      const store = tx.objectStore(storeName);
+      store.add({
+        dataUrl,
+        timestamp: Date.now()
+      });
+    } catch (err) {
+      console.error("Lỗi khi lưu ảnh vào Album", err);
+    }
+  };
+
+  window.loadAlbum = async () => {
+    try {
+      const db = await initDB();
+      const tx = db.transaction(storeName, 'readonly');
+      const store = tx.objectStore(storeName);
+      const request = store.getAll();
+      
+      request.onsuccess = () => {
+        const items = request.result;
+        items.sort((a, b) => b.timestamp - a.timestamp);
+        renderAlbum(items);
+      };
+    } catch (err) {
+      console.error("Lỗi tải Album", err);
+    }
+  };
+
+  window.deleteFromAlbum = async (id) => {
+    if(!confirm("Bạn có chắc chắn muốn xoá ảnh này khỏi album?")) return;
+    try {
+      const db = await initDB();
+      const tx = db.transaction(storeName, 'readwrite');
+      const store = tx.objectStore(storeName);
+      store.delete(id);
+      tx.oncomplete = () => window.loadAlbum();
+    } catch (err) {
+      console.error("Lỗi xoá ảnh", err);
+    }
+  };
+
+  window.openAlbumModal = () => {
+    window.openModal('album-modal');
+    window.loadAlbum();
+  };
+
+  window.downloadFromAlbum = (dataUrl) => {
+    const link = document.createElement('a');
+    link.download = `a3-photobooth-${Date.now()}.png`;
+    link.href = dataUrl;
+    link.click();
+  };
+
+  const renderAlbum = (items) => {
+    const grid = document.getElementById('album-grid');
+    grid.innerHTML = '';
+    
+    if (items.length === 0) {
+      grid.innerHTML = '<p style="color: #64748b; margin-top: 50px;">Album của bạn đang trống.</p>';
+      return;
+    }
+
+    items.forEach(item => {
+      const div = document.createElement('div');
+      div.className = 'album-item';
+      
+      const img = document.createElement('img');
+      img.src = item.dataUrl;
+      img.onclick = () => window.downloadFromAlbum(item.dataUrl);
+      img.title = "Bấm để tải lại ảnh này";
+      
+      const delBtn = document.createElement('button');
+      delBtn.className = 'album-delete-btn';
+      delBtn.innerHTML = '🗑️';
+      delBtn.onclick = (e) => {
+        e.stopPropagation();
+        window.deleteFromAlbum(item.id);
+      };
+      
+      div.appendChild(img);
+      div.appendChild(delBtn);
+      grid.appendChild(div);
+    });
   };
 
 });

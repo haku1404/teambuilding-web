@@ -1799,6 +1799,57 @@ footer {
 }
 .close-btn:hover { color: #ef4444; }
 
+/* Album Photobooth Styles */
+#album-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 15px;
+  padding: 10px 0;
+}
+
+.album-item {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  transition: transform 0.3s;
+}
+
+.album-item:hover {
+  transform: scale(1.05);
+}
+
+.album-item img {
+  width: 100%;
+  aspect-ratio: 3/4;
+  object-fit: cover;
+  display: block;
+  cursor: pointer;
+}
+
+.album-delete-btn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: rgba(239, 68, 68, 0.9);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0.8;
+  transition: opacity 0.3s;
+}
+
+.album-delete-btn:hover {
+  opacity: 1;
+}
+
 .modal-title {
   font-family: 'Cormorant Garamond', serif;
   font-size: 2rem;
