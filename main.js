@@ -1198,13 +1198,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const countdownDiv = document.getElementById('pb-countdown');
     const flashDiv = document.getElementById('pb-flash');
     const video = document.getElementById('pb-video');
+    const timerSelect = document.getElementById('pb-timer-select');
+    const timerValue = timerSelect ? parseInt(timerSelect.value) : 3;
     
     for (let i = 0; i < targetCount; i++) {
       status.textContent = `Ảnh ${i + 1}/${targetCount}`;
       countdownDiv.style.display = 'flex';
       
-      // 3 seconds countdown
-      for (let c = 3; c > 0; c--) {
+      // Dynamic countdown based on selection
+      for (let c = timerValue; c > 0; c--) {
         countdownDiv.textContent = c;
         await new Promise(r => setTimeout(r, 1000));
       }

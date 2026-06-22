@@ -587,14 +587,24 @@
 
       <!-- Step 2: Camera Capture -->
       <div id="pb-step-capture" style="display: none; flex: 1; flex-direction: column;">
-        <h3 class="modal-title" style="margin-bottom: 10px;">Chuẩn bị pose dáng! 📸</h3>
+        <h3 class="modal-title" style="margin-bottom: 5px;">Chuẩn bị pose dáng! 📸</h3>
         <p id="pb-status" style="margin-bottom: 10px; color: var(--primary-color); font-weight: bold;">Ảnh 1/4</p>
-        <div style="position: relative; width: 100%; max-width: 400px; margin: 0 auto; border-radius: 12px; overflow: hidden; background: #000; flex: 1;">
+        <div style="position: relative; width: 100%; max-width: 400px; margin: 0 auto; border-radius: 12px; overflow: hidden; background: #000; aspect-ratio: 3/4; max-height: 55vh;">
           <video id="pb-video" playsinline autoplay muted style="width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1);"></video>
           <div id="pb-countdown" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; align-items: center; justify-content: center; font-size: 8rem; color: white; text-shadow: 0 4px 10px rgba(0,0,0,0.5); font-weight: 800; z-index: 10;">3</div>
           <div id="pb-flash" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: white; opacity: 0; pointer-events: none; z-index: 20;"></div>
         </div>
-        <button id="pb-capture-btn" class="btn-glass" onclick="triggerCapture()" style="margin-top: 20px; font-size: 1.2rem; padding: 12px; background: var(--primary-color); color: white;">Bắt đầu chụp</button>
+        
+        <div style="margin-top: 15px; display: flex; justify-content: center; align-items: center; gap: 10px;">
+          <label style="font-size: 0.85rem; font-weight: bold; color: #64748b;">Đếm ngược:</label>
+          <select id="pb-timer-select" style="padding: 5px 10px; border-radius: 8px; border: 1px solid #cbd5e1; outline: none; font-family: Outfit, sans-serif; background: white; color: #1e293b;">
+            <option value="3">3 giây</option>
+            <option value="5">5 giây</option>
+            <option value="10">10 giây</option>
+          </select>
+        </div>
+
+        <button id="pb-capture-btn" class="btn-glass" onclick="triggerCapture()" style="margin-top: 15px; margin-bottom: 20px; font-size: 1.2rem; padding: 12px; background: var(--primary-color); color: white;">Bắt đầu chụp</button>
       </div>
 
       <!-- Step 3: Editor -->
