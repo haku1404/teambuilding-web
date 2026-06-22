@@ -1288,9 +1288,8 @@ document.addEventListener('DOMContentLoaded', () => {
     tmpCanvas.height = finalHeight;
     const ctx = tmpCanvas.getContext('2d');
     
-    // Background
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(0, 0, finalWidth, finalHeight);
+    // Background - make transparent so fabric background color shows through
+    ctx.clearRect(0, 0, finalWidth, finalHeight);
     
     // Draw photos
     let loadedCount = 0;
@@ -1323,17 +1322,6 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   const finalizeAssembly = (tmpCanvas, w, h, padding, footerHeight) => {
-    const ctx = tmpCanvas.getContext('2d');
-    // Draw logo/footer text
-    ctx.fillStyle = '#1e293b';
-    ctx.font = 'bold 32px Outfit, sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText('A3 BADMINTON', w / 2, h - padding - 15);
-    
-    ctx.fillStyle = '#65a30d';
-    ctx.font = 'bold 18px Outfit, sans-serif';
-    ctx.fillText('Teambuilding 2026', w / 2, h - padding + 10);
-    
     const finalDataUrl = tmpCanvas.toDataURL('image/png');
     
     if (pbFabricCanvas) {
@@ -1353,8 +1341,63 @@ document.addEventListener('DOMContentLoaded', () => {
       img.scaleX = scaleMultiplier;
       img.scaleY = scaleMultiplier;
       pbFabricCanvas.setBackgroundImage(img, pbFabricCanvas.renderAll.bind(pbFabricCanvas));
-      pbFabricCanvas.renderAll();
+      window.applyTheme('basic');
     });
+  };
+
+  window.applyTheme = (themeName) => {
+    if (!pbFabricCanvas) return;
+    
+    const objects = pbFabricCanvas.getObjects();
+    objects.forEach(obj => {
+      if (obj.isThemeDeco) pbFabricCanvas.remove(obj);
+    });
+
+    const w = pbFabricCanvas.width;
+    const h = pbFabricCanvas.height;
+    
+    // Scale texts relatively
+    const s = w / 400; // Base scale heuristic
+
+    const addText = (textStr, options) => {
+      const text = new fabric.Text(textStr, {
+        ...options,
+        isThemeDeco: true,
+        selectable: false,
+        evented: false,
+        fontFamily: 'Outfit, sans-serif'
+      });
+      pbFabricCanvas.add(text);
+    };
+
+    if (themeName === 'basic') {
+      pbFabricCanvas.backgroundColor = '#ffffff';
+      addText('A3 BADMINTON', { left: w/2, top: h - 50 * s, fontSize: 32 * s, fontWeight: 'bold', fill: '#1e293b', originX: 'center' });
+      addText('Teambuilding 2026', { left: w/2, top: h - 20 * s, fontSize: 16 * s, fontWeight: 'bold', fill: '#65a30d', originX: 'center' });
+    }
+    else if (themeName === 'pickleball') {
+      pbFabricCanvas.backgroundColor = '#dcfce7';
+      addText('🏓 PICKLEBALL CHAMP 🏆', { left: w/2, top: h - 50 * s, fontSize: 24 * s, fontWeight: 'bold', fill: '#166534', originX: 'center' });
+      addText('A3 Teambuilding 2026', { left: w/2, top: h - 20 * s, fontSize: 14 * s, fontWeight: 'bold', fill: '#15803d', originX: 'center' });
+      addText('🏓', { left: 15 * s, top: 15 * s, fontSize: 30 * s, isThemeDeco: true, selectable: false, evented: false });
+      addText('🏸', { left: w - 45 * s, top: 15 * s, fontSize: 30 * s, isThemeDeco: true, selectable: false, evented: false });
+    }
+    else if (themeName === 'party') {
+      pbFabricCanvas.backgroundColor = '#1e1b4b';
+      addText('🎉 TEAMBUILDING NIGHT 🍻', { left: w/2, top: h - 50 * s, fontSize: 22 * s, fontWeight: 'bold', fill: '#fcd34d', originX: 'center' });
+      addText('Cháy hết mình!', { left: w/2, top: h - 20 * s, fontSize: 15 * s, fontWeight: 'bold', fill: '#fbbf24', originX: 'center' });
+      addText('🎈', { left: 15 * s, top: 15 * s, fontSize: 30 * s, isThemeDeco: true, selectable: false, evented: false });
+      addText('✨', { left: w - 45 * s, top: 25 * s, fontSize: 30 * s, isThemeDeco: true, selectable: false, evented: false });
+    }
+    else if (themeName === 'chill') {
+      pbFabricCanvas.backgroundColor = '#fce7f3';
+      addText('🌸 CHILL & RELAX 🍹', { left: w/2, top: h - 50 * s, fontSize: 24 * s, fontWeight: 'bold', fill: '#be185d', originX: 'center' });
+      addText('A3 Tản Viên 2026', { left: w/2, top: h - 20 * s, fontSize: 15 * s, fontWeight: 'bold', fill: '#9d174d', originX: 'center' });
+      addText('💖', { left: 15 * s, top: 15 * s, fontSize: 30 * s, isThemeDeco: true, selectable: false, evented: false });
+      addText('☁️', { left: w - 45 * s, top: 15 * s, fontSize: 30 * s, isThemeDeco: true, selectable: false, evented: false });
+    }
+
+    pbFabricCanvas.renderAll();
   };
 
   window.applyFabricFilter = (filterType) => {
@@ -1364,6 +1407,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (filterType === 'grayscale') bg.filters.push(new fabric.Image.filters.Grayscale());
     if (filterType === 'sepia') bg.filters.push(new fabric.Image.filters.Sepia());
     if (filterType === 'vintage') bg.filters.push(new fabric.Image.filters.Vintage());
+    if (filterType === 'kodak' && fabric.Image.filters.Kodachrome) bg.filters.push(new fabric.Image.filters.Kodachrome());
+    if (filterType === 'polaroid' && fabric.Image.filters.Polaroid) bg.filters.push(new fabric.Image.filters.Polaroid());
     bg.applyFilters();
     pbFabricCanvas.renderAll();
   };
