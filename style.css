@@ -1776,6 +1776,17 @@ footer {
   overflow-y: auto;
 }
 
+/* Photobooth specific styles */
+.layout-option:hover {
+  border-color: var(--primary-color) !important;
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.canvas-container {
+  margin: 0 auto;
+}
+
 .close-btn {
   position: absolute;
   top: 15px;

@@ -1146,5 +1146,263 @@ document.addEventListener('DOMContentLoaded', () => {
       setTimeout(() => window.drawWheel(), 100);
     }
   };
+  // --- Photobooth Logic ---
+  let pbStream = null;
+  let pbLayout = '2x2';
+  let pbCapturedImages = [];
+  let pbFabricCanvas = null;
+
+  window.initPhotoboothLayout = () => {
+    document.getElementById('pb-step-layout').style.display = 'flex';
+    document.getElementById('pb-step-capture').style.display = 'none';
+    document.getElementById('pb-step-edit').style.display = 'none';
+    pbCapturedImages = [];
+  };
+
+  window.closePhotobooth = () => {
+    window.closeModal('photobooth-modal');
+    if (pbStream) {
+      pbStream.getTracks().forEach(t => t.stop());
+      pbStream = null;
+    }
+  };
+
+  window.startPhotobooth = async (layout) => {
+    pbLayout = layout;
+    document.getElementById('pb-step-layout').style.display = 'none';
+    document.getElementById('pb-step-capture').style.display = 'flex';
+    
+    try {
+      pbStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false });
+      const videoEl = document.getElementById('pb-video');
+      videoEl.srcObject = pbStream;
+    } catch (err) {
+      alert("Không thể truy cập Camera: " + err.message);
+      window.initPhotoboothLayout();
+    }
+  };
+
+  const getTargetShotCount = () => {
+    if (pbLayout === '2x2') return 4;
+    if (pbLayout === '3-vertical') return 3;
+    if (pbLayout === '4-vertical') return 4;
+    return 4;
+  };
+
+  window.triggerCapture = async () => {
+    const btn = document.getElementById('pb-capture-btn');
+    btn.style.display = 'none';
+    pbCapturedImages = [];
+    const targetCount = getTargetShotCount();
+    const status = document.getElementById('pb-status');
+    const countdownDiv = document.getElementById('pb-countdown');
+    const flashDiv = document.getElementById('pb-flash');
+    const video = document.getElementById('pb-video');
+    
+    for (let i = 0; i < targetCount; i++) {
+      status.textContent = `Ảnh ${i + 1}/${targetCount}`;
+      countdownDiv.style.display = 'flex';
+      
+      // 3 seconds countdown
+      for (let c = 3; c > 0; c--) {
+        countdownDiv.textContent = c;
+        await new Promise(r => setTimeout(r, 1000));
+      }
+      countdownDiv.style.display = 'none';
+      
+      // Flash effect
+      flashDiv.style.opacity = '1';
+      setTimeout(() => flashDiv.style.opacity = '0', 100);
+      
+      // Capture
+      const canvas = document.createElement('canvas');
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const ctx = canvas.getContext('2d');
+      // Mirror the image since video is mirrored via CSS
+      ctx.translate(canvas.width, 0);
+      ctx.scale(-1, 1);
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      
+      pbCapturedImages.push(canvas.toDataURL('image/png'));
+      
+      if (i < targetCount - 1) {
+        await new Promise(r => setTimeout(r, 1000)); // wait before next countdown
+      }
+    }
+    
+    // Process and go to Edit
+    btn.style.display = 'block';
+    assembleAndEdit();
+  };
+
+  const assembleAndEdit = () => {
+    if (pbStream) {
+      pbStream.getTracks().forEach(t => t.stop());
+      pbStream = null;
+    }
+    document.getElementById('pb-step-capture').style.display = 'none';
+    document.getElementById('pb-step-edit').style.display = 'flex';
+    
+    // Define dimensions based on layout
+    const padding = 20;
+    const gap = 10;
+    const footerHeight = 80;
+    let finalWidth, finalHeight;
+    let positions = [];
+    let imgW = 400, imgH = 300; // Expected crop/draw size for each photo
+    
+    if (pbLayout === '2x2') {
+      imgW = 300; imgH = 225; // 4:3 aspect
+      finalWidth = padding * 2 + imgW * 2 + gap;
+      finalHeight = padding * 2 + imgH * 2 + gap + footerHeight;
+      positions = [
+        {x: padding, y: padding},
+        {x: padding + imgW + gap, y: padding},
+        {x: padding, y: padding + imgH + gap},
+        {x: padding + imgW + gap, y: padding + imgH + gap}
+      ];
+    } else if (pbLayout === '3-vertical') {
+      imgW = 300; imgH = 200; // 3:2 aspect
+      finalWidth = padding * 2 + imgW;
+      finalHeight = padding * 2 + (imgH * 3) + (gap * 2) + footerHeight;
+      positions = [
+        {x: padding, y: padding},
+        {x: padding, y: padding + imgH + gap},
+        {x: padding, y: padding + (imgH * 2) + (gap * 2)}
+      ];
+    } else if (pbLayout === '4-vertical') {
+      imgW = 300; imgH = 200; // 3:2 aspect
+      finalWidth = padding * 2 + imgW;
+      finalHeight = padding * 2 + (imgH * 4) + (gap * 3) + footerHeight;
+      positions = [
+        {x: padding, y: padding},
+        {x: padding, y: padding + imgH + gap},
+        {x: padding, y: padding + (imgH * 2) + (gap * 2)},
+        {x: padding, y: padding + (imgH * 3) + (gap * 3)}
+      ];
+    }
+
+    const tmpCanvas = document.createElement('canvas');
+    tmpCanvas.width = finalWidth;
+    tmpCanvas.height = finalHeight;
+    const ctx = tmpCanvas.getContext('2d');
+    
+    // Background
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, finalWidth, finalHeight);
+    
+    // Draw photos
+    let loadedCount = 0;
+    const targetCount = pbCapturedImages.length;
+    
+    pbCapturedImages.forEach((dataUrl, index) => {
+      const img = new Image();
+      img.onload = () => {
+        // Source crop to aspect ratio
+        const sAspectRatio = img.width / img.height;
+        const dAspectRatio = imgW / imgH;
+        let sx = 0, sy = 0, sWidth = img.width, sHeight = img.height;
+        
+        if (sAspectRatio > dAspectRatio) {
+          sWidth = img.height * dAspectRatio;
+          sx = (img.width - sWidth) / 2;
+        } else {
+          sHeight = img.width / dAspectRatio;
+          sy = (img.height - sHeight) / 2;
+        }
+        
+        ctx.drawImage(img, sx, sy, sWidth, sHeight, positions[index].x, positions[index].y, imgW, imgH);
+        loadedCount++;
+        if (loadedCount === targetCount) {
+          finalizeAssembly(tmpCanvas, finalWidth, finalHeight, padding, footerHeight);
+        }
+      };
+      img.src = dataUrl;
+    });
+  };
+
+  const finalizeAssembly = (tmpCanvas, w, h, padding, footerHeight) => {
+    const ctx = tmpCanvas.getContext('2d');
+    // Draw logo/footer text
+    ctx.fillStyle = '#1e293b';
+    ctx.font = 'bold 32px Outfit, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('A3 BADMINTON', w / 2, h - padding - 15);
+    
+    ctx.fillStyle = '#65a30d';
+    ctx.font = 'bold 18px Outfit, sans-serif';
+    ctx.fillText('Teambuilding 2026', w / 2, h - padding + 10);
+    
+    const finalDataUrl = tmpCanvas.toDataURL('image/png');
+    
+    if (pbFabricCanvas) {
+      pbFabricCanvas.dispose();
+    }
+    
+    const wrapper = document.getElementById('pb-step-edit');
+    const displayWidth = Math.min(wrapper.clientWidth - 40, w);
+    const scaleMultiplier = displayWidth / w;
+    
+    pbFabricCanvas = new fabric.Canvas('pb-fabric-canvas', {
+      width: displayWidth,
+      height: h * scaleMultiplier
+    });
+    
+    fabric.Image.fromURL(finalDataUrl, (img) => {
+      img.scaleX = scaleMultiplier;
+      img.scaleY = scaleMultiplier;
+      pbFabricCanvas.setBackgroundImage(img, pbFabricCanvas.renderAll.bind(pbFabricCanvas));
+      pbFabricCanvas.renderAll();
+    });
+  };
+
+  window.applyFabricFilter = (filterType) => {
+    if (!pbFabricCanvas || !pbFabricCanvas.backgroundImage) return;
+    const bg = pbFabricCanvas.backgroundImage;
+    bg.filters = [];
+    if (filterType === 'grayscale') bg.filters.push(new fabric.Image.filters.Grayscale());
+    if (filterType === 'sepia') bg.filters.push(new fabric.Image.filters.Sepia());
+    if (filterType === 'vintage') bg.filters.push(new fabric.Image.filters.Vintage());
+    bg.applyFilters();
+    pbFabricCanvas.renderAll();
+  };
+
+  window.addSticker = (emoji) => {
+    if (!pbFabricCanvas) return;
+    const text = new fabric.Text(emoji, {
+      left: pbFabricCanvas.width / 2,
+      top: pbFabricCanvas.height / 2,
+      fontSize: 50,
+      originX: 'center',
+      originY: 'center',
+      transparentCorners: false,
+      cornerColor: '#ef4444',
+      cornerSize: 12,
+      borderColor: '#ef4444'
+    });
+    pbFabricCanvas.add(text);
+    pbFabricCanvas.setActiveObject(text);
+  };
+
+  window.downloadPhotobooth = () => {
+    if (!pbFabricCanvas) return;
+    
+    pbFabricCanvas.discardActiveObject();
+    pbFabricCanvas.renderAll();
+    
+    // Create a temporary canvas to export at high resolution (multiplier inversely proportional to scale)
+    const multiplier = 1 / pbFabricCanvas.backgroundImage.scaleX;
+    const dataURL = pbFabricCanvas.toDataURL({
+      format: 'png',
+      quality: 1,
+      multiplier: multiplier
+    });
+    
+    const link = document.createElement('a');
+    link.download = `a3-photobooth-${Date.now()}.png`;
+    link.href = dataURL;
+    link.click();
+  };
 
 });
