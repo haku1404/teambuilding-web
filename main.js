@@ -1186,6 +1186,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (pbLayout === '2x2') return 4;
     if (pbLayout === '3-vertical') return 3;
     if (pbLayout === '4-vertical') return 4;
+    if (pbLayout === '1-large') return 1;
     return 4;
   };
 
@@ -1282,6 +1283,13 @@ document.addEventListener('DOMContentLoaded', () => {
         {x: padding, y: padding + imgH + gap},
         {x: padding, y: padding + (imgH * 2) + (gap * 2)},
         {x: padding, y: padding + (imgH * 3) + (gap * 3)}
+      ];
+    } else if (pbLayout === '1-large') {
+      imgW = 300; imgH = 400; // 3:4 aspect
+      finalWidth = padding * 2 + imgW;
+      finalHeight = padding * 2 + imgH + footerHeight;
+      positions = [
+        {x: padding, y: padding}
       ];
     }
 

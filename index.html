@@ -567,25 +567,34 @@
       <!-- Step 1: Layout Selection -->
       <div id="pb-step-layout" style="flex: 1; display: flex; flex-direction: column;">
         <h3 class="modal-title" style="margin-bottom: 20px;">Chọn Khung Ảnh</h3>
-        <div class="layout-grid" style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
-          <div class="layout-option" onclick="startPhotobooth('2x2')" style="cursor: pointer; border: 2px solid #cbd5e1; border-radius: 10px; padding: 10px; transition: 0.3s; width: 120px;">
-            <div style="width: 100%; aspect-ratio: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 4px; background: #94a3b8; padding: 4px; border-radius: 6px;">
+        <div class="layout-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 10px;">
+          <div class="layout-option" onclick="startPhotobooth('2x2')" style="cursor: pointer; border: 2px solid #cbd5e1; border-radius: 10px; padding: 15px 10px; transition: 0.3s; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+            <div style="width: 70px; height: 70px; display: grid; grid-template-columns: 1fr 1fr; gap: 4px; background: #94a3b8; padding: 4px; border-radius: 6px;">
               <div style="background: white;"></div><div style="background: white;"></div>
               <div style="background: white;"></div><div style="background: white;"></div>
             </div>
-            <p style="margin-top: 10px; font-weight: bold;">Khung 2x2</p>
+            <p style="margin-top: 10px; margin-bottom: 0; font-weight: bold; font-size: 0.95rem;">Khung 2x2</p>
           </div>
-          <div class="layout-option" onclick="startPhotobooth('3-vertical')" style="cursor: pointer; border: 2px solid #cbd5e1; border-radius: 10px; padding: 10px; transition: 0.3s; width: 100px;">
-            <div style="width: 100%; aspect-ratio: 1/3; display: grid; grid-template-rows: 1fr 1fr 1fr; gap: 4px; background: #94a3b8; padding: 4px; border-radius: 6px;">
+          
+          <div class="layout-option" onclick="startPhotobooth('3-vertical')" style="cursor: pointer; border: 2px solid #cbd5e1; border-radius: 10px; padding: 15px 10px; transition: 0.3s; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+            <div style="width: 35px; height: 90px; display: grid; grid-template-rows: 1fr 1fr 1fr; gap: 4px; background: #94a3b8; padding: 4px; border-radius: 6px;">
               <div style="background: white;"></div><div style="background: white;"></div><div style="background: white;"></div>
             </div>
-            <p style="margin-top: 10px; font-weight: bold;">3 dọc</p>
+            <p style="margin-top: 10px; margin-bottom: 0; font-weight: bold; font-size: 0.95rem;">3 dọc</p>
           </div>
-          <div class="layout-option" onclick="startPhotobooth('4-vertical')" style="cursor: pointer; border: 2px solid #cbd5e1; border-radius: 10px; padding: 10px; transition: 0.3s; width: 100px;">
-            <div style="width: 100%; aspect-ratio: 1/4; display: grid; grid-template-rows: 1fr 1fr 1fr 1fr; gap: 4px; background: #94a3b8; padding: 4px; border-radius: 6px;">
+          
+          <div class="layout-option" onclick="startPhotobooth('4-vertical')" style="cursor: pointer; border: 2px solid #cbd5e1; border-radius: 10px; padding: 15px 10px; transition: 0.3s; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+            <div style="width: 30px; height: 100px; display: grid; grid-template-rows: 1fr 1fr 1fr 1fr; gap: 4px; background: #94a3b8; padding: 4px; border-radius: 6px;">
               <div style="background: white;"></div><div style="background: white;"></div><div style="background: white;"></div><div style="background: white;"></div>
             </div>
-            <p style="margin-top: 10px; font-weight: bold;">4 dọc</p>
+            <p style="margin-top: 10px; margin-bottom: 0; font-weight: bold; font-size: 0.95rem;">4 dọc</p>
+          </div>
+
+          <div class="layout-option" onclick="startPhotobooth('1-large')" style="cursor: pointer; border: 2px solid #cbd5e1; border-radius: 10px; padding: 15px 10px; transition: 0.3s; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+            <div style="width: 65px; height: 85px; display: grid; gap: 4px; background: #94a3b8; padding: 4px; border-radius: 6px;">
+              <div style="background: white;"></div>
+            </div>
+            <p style="margin-top: 10px; margin-bottom: 0; font-weight: bold; font-size: 0.95rem;">1 ảnh to</p>
           </div>
         </div>
       </div>
@@ -594,7 +603,7 @@
       <div id="pb-step-capture" style="display: none; flex: 1; flex-direction: column;">
         <h3 class="modal-title" style="margin-bottom: 5px;">Chuẩn bị pose dáng! 📸</h3>
         <p id="pb-status" style="margin-bottom: 10px; color: var(--primary-color); font-weight: bold;">Ảnh 1/4</p>
-        <div style="position: relative; width: 100%; max-width: 400px; margin: 0 auto; border-radius: 12px; overflow: hidden; background: #000; aspect-ratio: 3/4; max-height: 55vh;">
+        <div style="position: relative; width: 100%; max-width: 280px; margin: 0 auto; border-radius: 12px; overflow: hidden; background: #000; aspect-ratio: 3/4; max-height: 45vh;">
           <video id="pb-video" playsinline autoplay muted style="width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1);"></video>
           <div id="pb-countdown" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; align-items: center; justify-content: center; font-size: 8rem; color: white; text-shadow: 0 4px 10px rgba(0,0,0,0.5); font-weight: 800; z-index: 10;">3</div>
           <div id="pb-flash" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: white; opacity: 0; pointer-events: none; z-index: 20;"></div>
@@ -609,7 +618,7 @@
           </select>
         </div>
 
-        <button id="pb-capture-btn" class="btn-glass" onclick="triggerCapture()" style="margin-top: 15px; margin-bottom: 20px; font-size: 1.2rem; padding: 12px; background: var(--primary-color); color: white;">Bắt đầu chụp</button>
+        <button id="pb-capture-btn" class="btn-glass" onclick="triggerCapture()" style="margin-top: 15px; margin-bottom: 30px; font-size: 1.2rem; padding: 12px; background: var(--primary-color); color: white; box-shadow: 0 10px 20px rgba(101, 163, 13, 0.3);">Bắt đầu chụp</button>
       </div>
 
       <!-- Step 3: Editor -->
