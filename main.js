@@ -1339,11 +1339,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     const wrapper = document.getElementById('pb-step-edit');
-    const displayWidth = Math.min(wrapper.clientWidth - 40, w);
-    const scaleMultiplier = displayWidth / w;
+    const maxWidth = Math.min(wrapper.clientWidth - 40, w);
+    const maxHeight = window.innerHeight * 0.35; // max 35% screen height
+    
+    // Scale container to fit both width and height constraints
+    const scaleMultiplier = Math.min(maxWidth / w, maxHeight / h);
     
     pbFabricCanvas = new fabric.Canvas('pb-fabric-canvas', {
-      width: displayWidth,
+      width: w * scaleMultiplier,
       height: h * scaleMultiplier
     });
     
@@ -1440,7 +1443,7 @@ document.addEventListener('DOMContentLoaded', () => {
     pbFabricCanvas.setActiveObject(text);
   };
 
-  window.downloadPhotobooth = () => {
+  window.downloadPhotobooth = async () => {
     if (!pbFabricCanvas) return;
     
     pbFabricCanvas.discardActiveObject();
@@ -1454,14 +1457,35 @@ document.addEventListener('DOMContentLoaded', () => {
       multiplier: multiplier
     });
     
-    const link = document.createElement('a');
-    link.download = `a3-photobooth-${Date.now()}.png`;
-    link.href = dataURL;
-    link.click();
-    
     // Lưu vào Album (IndexedDB)
     saveToAlbum(dataURL);
-    alert("Ảnh đã được tải xuống và lưu vào Album của bạn!");
+    
+    try {
+      const blob = await (await fetch(dataURL)).blob();
+      const file = new File([blob], `a3-photobooth-${Date.now()}.png`, { type: 'image/png' });
+
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share({
+          files: [file],
+          title: 'A3 Photobooth',
+          text: 'Ảnh kỷ niệm Teambuilding A3!'
+        });
+        alert("Thành công! Bạn hãy chọn 'Lưu Hình Ảnh' (Save Image) để đưa vào Album điện thoại nhé.");
+      } else {
+        const link = document.createElement('a');
+        link.download = `a3-photobooth-${Date.now()}.png`;
+        link.href = dataURL;
+        link.click();
+        alert("Đã tải ảnh về máy (vào thư mục Tải về) và lưu vào Album web!");
+      }
+    } catch (err) {
+      if (err.name !== 'AbortError') {
+        const link = document.createElement('a');
+        link.download = `a3-photobooth-${Date.now()}.png`;
+        link.href = dataURL;
+        link.click();
+      }
+    }
   };
 
   // --- IndexedDB cho Photobooth Album ---
