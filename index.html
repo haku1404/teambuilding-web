@@ -624,34 +624,34 @@
       <!-- Step 3: Editor -->
       <div id="pb-step-edit" style="display: none; flex: 1; flex-direction: column; overflow-y: auto; padding-bottom: 20px;">
         <h3 class="modal-title" style="margin-bottom: 10px;">Trang trí & Tải về 🎨</h3>
-        <div style="position: relative; display: flex; justify-content: center; align-items: center; background: #e2e8f0; border-radius: 8px; overflow: hidden; max-height: 40vh; min-height: 250px;">
+        <div style="position: relative; display: flex; justify-content: center; align-items: center; background: #e2e8f0; border-radius: 8px; overflow: hidden; max-height: 35vh; min-height: 200px;">
           <canvas id="pb-fabric-canvas"></canvas>
         </div>
         
-        <div class="editor-toolbar" style="margin-top: 15px; text-align: left;">
+        <div class="editor-toolbar" style="margin-top: 10px; text-align: left;">
           <!-- Themes -->
           <p style="font-size: 0.8rem; font-weight: bold; margin-bottom: 5px; color: #64748b;">Khung (Theme):</p>
-          <div style="display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 10px;">
-            <button class="btn-glass" onclick="applyTheme('basic')" style="padding: 5px 10px; font-size: 0.85rem; border-color: #cbd5e1;">🤍 Cơ bản</button>
-            <button class="btn-glass" onclick="applyTheme('pickleball')" style="padding: 5px 10px; font-size: 0.85rem; border-color: #22c55e;">🏓 Pickleball</button>
-            <button class="btn-glass" onclick="applyTheme('party')" style="padding: 5px 10px; font-size: 0.85rem; border-color: #3b82f6;">🎉 Quẩy</button>
-            <button class="btn-glass" onclick="applyTheme('chill')" style="padding: 5px 10px; font-size: 0.85rem; border-color: #ec4899;">🌸 Chill</button>
+          <div style="display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; margin-bottom: 8px;">
+            <button class="btn-glass" onclick="applyTheme('basic')" style="padding: 4px 8px; font-size: 0.85rem; border-color: #cbd5e1;">🤍 Cơ bản</button>
+            <button class="btn-glass" onclick="applyTheme('pickleball')" style="padding: 4px 8px; font-size: 0.85rem; border-color: #22c55e;">🏓 Pickleball</button>
+            <button class="btn-glass" onclick="applyTheme('party')" style="padding: 4px 8px; font-size: 0.85rem; border-color: #3b82f6;">🎉 Quẩy</button>
+            <button class="btn-glass" onclick="applyTheme('chill')" style="padding: 4px 8px; font-size: 0.85rem; border-color: #ec4899;">🌸 Chill</button>
           </div>
 
           <!-- Filters -->
           <p style="font-size: 0.8rem; font-weight: bold; margin-bottom: 5px; color: #64748b;">Màu ảnh (Filter):</p>
-          <div style="display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 10px;">
-            <button class="btn-glass" onclick="applyFabricFilter('normal')" style="padding: 5px 10px; font-size: 0.85rem;">Gốc</button>
-            <button class="btn-glass" onclick="applyFabricFilter('grayscale')" style="padding: 5px 10px; font-size: 0.85rem;">Đen trắng</button>
-            <button class="btn-glass" onclick="applyFabricFilter('sepia')" style="padding: 5px 10px; font-size: 0.85rem;">Hoài cổ</button>
-            <button class="btn-glass" onclick="applyFabricFilter('vintage')" style="padding: 5px 10px; font-size: 0.85rem;">Vintage</button>
-            <button class="btn-glass" onclick="applyFabricFilter('kodak')" style="padding: 5px 10px; font-size: 0.85rem;">Kodak</button>
-            <button class="btn-glass" onclick="applyFabricFilter('polaroid')" style="padding: 5px 10px; font-size: 0.85rem;">Polaroid</button>
+          <div style="display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; margin-bottom: 8px;">
+            <button class="btn-glass" onclick="applyFabricFilter('normal')" style="padding: 4px 8px; font-size: 0.85rem;">Gốc</button>
+            <button class="btn-glass" onclick="applyFabricFilter('grayscale')" style="padding: 4px 8px; font-size: 0.85rem;">Đen trắng</button>
+            <button class="btn-glass" onclick="applyFabricFilter('sepia')" style="padding: 4px 8px; font-size: 0.85rem;">Hoài cổ</button>
+            <button class="btn-glass" onclick="applyFabricFilter('vintage')" style="padding: 4px 8px; font-size: 0.85rem;">Vintage</button>
+            <button class="btn-glass" onclick="applyFabricFilter('kodak')" style="padding: 4px 8px; font-size: 0.85rem;">Kodak</button>
+            <button class="btn-glass" onclick="applyFabricFilter('polaroid')" style="padding: 4px 8px; font-size: 0.85rem;">Polaroid</button>
           </div>
 
           <!-- Stickers -->
           <p style="font-size: 0.8rem; font-weight: bold; margin-bottom: 5px; color: #64748b;">Nhãn dán (Bấm để thêm):</p>
-          <div style="display: flex; gap: 15px; overflow-x: auto; padding-bottom: 10px; font-size: 1.5rem;">
+          <div style="display: flex; gap: 15px; overflow-x: auto; padding-bottom: 5px; font-size: 1.5rem;">
             <span style="cursor: pointer;" onclick="addSticker('🏓')">🏓</span>
             <span style="cursor: pointer;" onclick="addSticker('🏸')">🏸</span>
             <span style="cursor: pointer;" onclick="addSticker('🏆')">🏆</span>
