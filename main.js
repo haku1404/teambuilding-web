@@ -1167,14 +1167,45 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
+  window.pbFacingMode = 'user';
+
+  window.toggleCamera = async () => {
+    window.pbFacingMode = window.pbFacingMode === 'user' ? 'environment' : 'user';
+    const videoEl = document.getElementById('pb-video');
+    videoEl.style.transform = window.pbFacingMode === 'user' ? 'scaleX(-1)' : 'none';
+    
+    if (pbStream) {
+      pbStream.getTracks().forEach(t => t.stop());
+    }
+    
+    try {
+      pbStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: window.pbFacingMode }, audio: false });
+      videoEl.srcObject = pbStream;
+    } catch (err) {
+      console.warn("Camera switch failed, reverting.", err);
+      // Revert state
+      window.pbFacingMode = window.pbFacingMode === 'user' ? 'environment' : 'user';
+      videoEl.style.transform = window.pbFacingMode === 'user' ? 'scaleX(-1)' : 'none';
+      try {
+        pbStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: window.pbFacingMode }, audio: false });
+        videoEl.srcObject = pbStream;
+      } catch (e) {
+        alert("Lỗi truy cập camera: " + e.message);
+      }
+    }
+  };
+
   window.startPhotobooth = async (layout) => {
     pbLayout = layout;
     document.getElementById('pb-step-layout').style.display = 'none';
     document.getElementById('pb-step-capture').style.display = 'flex';
     
+    window.pbFacingMode = 'user';
+    const videoEl = document.getElementById('pb-video');
+    videoEl.style.transform = 'scaleX(-1)';
+    
     try {
-      pbStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false });
-      const videoEl = document.getElementById('pb-video');
+      pbStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: window.pbFacingMode }, audio: false });
       videoEl.srcObject = pbStream;
     } catch (err) {
       alert("Không thể truy cập Camera: " + err.message);
@@ -1222,9 +1253,12 @@ document.addEventListener('DOMContentLoaded', () => {
       canvas.width = video.videoWidth;
       canvas.height = video.videoHeight;
       const ctx = canvas.getContext('2d');
-      // Mirror the image since video is mirrored via CSS
-      ctx.translate(canvas.width, 0);
-      ctx.scale(-1, 1);
+      
+      // Mirror the image if front camera is used
+      if (window.pbFacingMode === 'user') {
+        ctx.translate(canvas.width, 0);
+        ctx.scale(-1, 1);
+      }
       ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
       
       pbCapturedImages.push(canvas.toDataURL('image/png'));
