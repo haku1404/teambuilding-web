@@ -735,6 +735,20 @@
     <img class="lightbox-content" id="lightbox-img">
   </div>
 
+  <!-- Game Overlay (Hidden by Default) -->
+  <div id="game-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 9999; background: rgba(15, 23, 42, 0.95); flex-direction: column; align-items: center; justify-content: center; touch-action: none;">
+    <canvas id="game-canvas"></canvas>
+    
+    <div id="game-over-ui" class="glass-card" style="display: none; position: absolute; padding: 30px; text-align: center; border-radius: 15px; flex-direction: column; align-items: center; gap: 15px;">
+      <h2 style="color: #ef4444; margin: 0; font-size: 2rem;">Game Over!</h2>
+      <p style="color: white; margin: 0; font-size: 1.2rem;">Bạn hứng được: <strong id="game-final-score" style="color: #fbbf24; font-size: 1.5rem;">0</strong> điểm</p>
+      <div style="display: flex; gap: 10px; margin-top: 10px;">
+        <button class="btn-primary" onclick="window.continueGame()" style="padding: 10px 20px;">Chơi tiếp</button>
+        <button class="btn-glass" onclick="window.exitGame()" style="padding: 10px 20px; color: white;">Thoát</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Audio for Wheel -->
   <audio id="wheel-cheer" src="https://actions.google.com/sounds/v1/crowds/crowd_cheer.ogg"></audio>
 

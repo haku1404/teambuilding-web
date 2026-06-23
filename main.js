@@ -770,6 +770,28 @@ document.addEventListener('DOMContentLoaded', () => {
     const duration = Math.floor(Math.random() * 10) + 18;
     el.style.animationDuration = `${duration}s`;
 
+    // Long press logic
+    let pressTimer;
+    const startPress = (e) => {
+      pressTimer = setTimeout(() => {
+        if (typeof window.startHiddenGame === 'function') {
+          const fullMsg = typeof messages !== 'undefined' ? messages.find(m => m.id === id) : null;
+          const score = fullMsg ? (fullMsg.score || 0) : 0;
+          window.startHiddenGame({ id, name, text, score });
+        }
+      }, 3000);
+    };
+    const cancelPress = () => {
+      if (pressTimer) clearTimeout(pressTimer);
+    };
+
+    el.addEventListener('mousedown', startPress);
+    el.addEventListener('touchstart', startPress, { passive: true });
+    el.addEventListener('mouseup', cancelPress);
+    el.addEventListener('mouseleave', cancelPress);
+    el.addEventListener('touchend', cancelPress);
+    el.addEventListener('touchmove', cancelPress, { passive: true });
+
     container.appendChild(el);
 
     // Cleanup after animation
@@ -794,7 +816,10 @@ document.addEventListener('DOMContentLoaded', () => {
     list.innerHTML = sorted.map(msg => `
       <div class="mailbox-item">
         <div class="mail-info">
-          <span class="mail-header">${msg.time} - ${msg.date}</span>
+          <span class="mail-header">
+            ${msg.time} - ${msg.date} 
+            ${msg.score && msg.score > 0 ? `<span style="color: #fbbf24; font-weight: bold; margin-left: 8px;">🎮 ${msg.score} điểm</span>` : ''}
+          </span>
           <span class="mail-name">${msg.name}</span>
           <span class="mail-text">${msg.text}</span>
         </div>
@@ -1695,6 +1720,174 @@ document.addEventListener('DOMContentLoaded', () => {
       div.appendChild(delBtn);
       grid.appendChild(div);
     });
+  };
+
+  // --- 11. HIDDEN MINIGAME (Brick Breaker with Chat Bubble) ---
+  let gameInterval;
+  let gameContext;
+  let gameCanvas;
+  let ball = { x: 0, y: 0, vx: 0, vy: 0, width: 200, height: 40 };
+  let paddle = { x: 0, y: 0, width: 120, height: 15 };
+  let currentMsgData = null;
+  let gameScore = 0;
+  let isGameOver = false;
+
+  window.startHiddenGame = (msgData) => {
+    currentMsgData = msgData;
+    gameScore = 0;
+    isGameOver = false;
+    
+    const overlay = document.getElementById('game-overlay');
+    gameCanvas = document.getElementById('game-canvas');
+    const gameOverUi = document.getElementById('game-over-ui');
+    
+    overlay.style.display = 'flex';
+    gameOverUi.style.display = 'none';
+    
+    // Setup canvas
+    gameCanvas.width = window.innerWidth;
+    gameCanvas.height = window.innerHeight;
+    gameContext = gameCanvas.getContext('2d');
+    
+    // Init objects
+    ball.width = Math.min(250, window.innerWidth - 40);
+    ball.x = Math.random() * (gameCanvas.width - ball.width);
+    ball.y = gameCanvas.height * 0.2;
+    // Tốc độ ban đầu
+    const speed = window.innerWidth < 600 ? 5 : 7;
+    ball.vx = (Math.random() > 0.5 ? 1 : -1) * speed;
+    ball.vy = speed;
+    
+    paddle.width = Math.min(150, window.innerWidth * 0.35);
+    paddle.x = gameCanvas.width / 2 - paddle.width / 2;
+    paddle.y = gameCanvas.height - 80; // Cao lên một chút để dễ bấm trên điện thoại
+    
+    // Controls
+    const movePaddle = (e) => {
+      let clientX = e.clientX;
+      if (e.touches && e.touches.length > 0) {
+        clientX = e.touches[0].clientX;
+      }
+      if (clientX !== undefined) {
+        paddle.x = clientX - paddle.width / 2;
+        // clamp
+        if (paddle.x < 0) paddle.x = 0;
+        if (paddle.x + paddle.width > gameCanvas.width) paddle.x = gameCanvas.width - paddle.width;
+      }
+    };
+    
+    overlay.addEventListener('mousemove', movePaddle);
+    overlay.addEventListener('touchmove', movePaddle, { passive: false });
+    
+    // Game Loop
+    if (gameInterval) cancelAnimationFrame(gameInterval);
+    const loop = () => {
+      if (isGameOver) return;
+      updateGame();
+      drawGame();
+      gameInterval = requestAnimationFrame(loop);
+    };
+    loop();
+  };
+  
+  const updateGame = () => {
+    ball.x += ball.vx;
+    ball.y += ball.vy;
+    
+    // Bounce walls
+    if (ball.x <= 0) { ball.x = 0; ball.vx *= -1; }
+    if (ball.x + ball.width >= gameCanvas.width) { ball.x = gameCanvas.width - ball.width; ball.vx *= -1; }
+    if (ball.y <= 0) { ball.y = 0; ball.vy *= -1; }
+    
+    // Bounce paddle
+    if (ball.vy > 0 && 
+        ball.y + ball.height >= paddle.y && 
+        ball.y + ball.height <= paddle.y + paddle.height + 20 &&
+        ball.x + ball.width >= paddle.x && 
+        ball.x <= paddle.x + paddle.width) {
+      
+      ball.vy *= -1.05; // increase speed 5%
+      ball.vx *= 1.05;
+      ball.y = paddle.y - ball.height;
+      gameScore++;
+      
+      // Vibrate if supported
+      if (navigator.vibrate) navigator.vibrate(20);
+    }
+    
+    // Game Over
+    if (ball.y > gameCanvas.height) {
+      isGameOver = true;
+      showGameOver();
+    }
+  };
+  
+  const drawGame = () => {
+    gameContext.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+    
+    // Draw Score Background
+    gameContext.fillStyle = 'rgba(255,255,255,0.1)';
+    gameContext.font = 'bold 150px Outfit';
+    gameContext.textAlign = 'center';
+    gameContext.textBaseline = 'middle';
+    gameContext.fillText(gameScore, gameCanvas.width / 2, gameCanvas.height / 2);
+
+    // Draw Paddle
+    gameContext.fillStyle = '#10b981'; // Green primary
+    gameContext.beginPath();
+    gameContext.roundRect(paddle.x, paddle.y, paddle.width, paddle.height, 8);
+    gameContext.fill();
+    
+    // Draw Ball (Chat bubble)
+    gameContext.fillStyle = '#ffffff';
+    gameContext.shadowColor = 'rgba(0,0,0,0.5)';
+    gameContext.shadowBlur = 15;
+    gameContext.beginPath();
+    gameContext.roundRect(ball.x, ball.y, ball.width, ball.height, 20);
+    gameContext.fill();
+    
+    gameContext.shadowBlur = 0; // reset
+    
+    // Draw Text
+    gameContext.fillStyle = '#1e293b';
+    gameContext.font = 'bold 14px Outfit';
+    gameContext.textAlign = 'left';
+    gameContext.textBaseline = 'middle';
+    
+    const maxTextWidth = ball.width - 20;
+    let displayName = (currentMsgData.name || "Ẩn danh") + ":";
+    let displayText = currentMsgData.text || "";
+    
+    gameContext.fillStyle = '#10b981';
+    gameContext.fillText(displayName, ball.x + 10, ball.y + ball.height / 2);
+    
+    gameContext.fillStyle = '#475569';
+    let textX = ball.x + 15 + gameContext.measureText(displayName).width;
+    gameContext.fillText(displayText, textX, ball.y + ball.height / 2, Math.max(10, maxTextWidth - gameContext.measureText(displayName).width - 5));
+  };
+  
+  const showGameOver = () => {
+    const gameOverUi = document.getElementById('game-over-ui');
+    document.getElementById('game-final-score').textContent = gameScore;
+    gameOverUi.style.display = 'flex';
+    
+    // Save score to Firebase
+    if (currentMsgData && currentMsgData.id && gameScore > 0) {
+      const oldScore = currentMsgData.score || 0;
+      if (gameScore > oldScore) {
+        set(ref(db, `messages/${currentMsgData.id}/score`), gameScore);
+      }
+    }
+  };
+  
+  window.continueGame = () => {
+    window.startHiddenGame(currentMsgData);
+  };
+  
+  window.exitGame = () => {
+    isGameOver = true;
+    if (gameInterval) cancelAnimationFrame(gameInterval);
+    document.getElementById('game-overlay').style.display = 'none';
   };
 
 });
