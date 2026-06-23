@@ -770,27 +770,26 @@ document.addEventListener('DOMContentLoaded', () => {
     const duration = Math.floor(Math.random() * 10) + 18;
     el.style.animationDuration = `${duration}s`;
 
-    // Long press logic
-    let pressTimer;
-    const startPress = (e) => {
-      pressTimer = setTimeout(() => {
+    // Double click / Double tap logic
+    let lastTap = 0;
+    const handleTap = (e) => {
+      const currentTime = new Date().getTime();
+      const tapLength = currentTime - lastTap;
+      
+      if (tapLength < 400 && tapLength > 0) {
+        // Double tap detected!
+        e.preventDefault(); // Ngăn chặn zoom màn hình trên mobile
         if (typeof window.startHiddenGame === 'function') {
           const fullMsg = typeof messages !== 'undefined' ? messages.find(m => m.id === id) : null;
           const score = fullMsg ? (fullMsg.score || 0) : 0;
           window.startHiddenGame({ id, name, text, score });
         }
-      }, 3000);
-    };
-    const cancelPress = () => {
-      if (pressTimer) clearTimeout(pressTimer);
+      }
+      lastTap = currentTime;
     };
 
-    el.addEventListener('mousedown', startPress);
-    el.addEventListener('touchstart', startPress, { passive: true });
-    el.addEventListener('mouseup', cancelPress);
-    el.addEventListener('mouseleave', cancelPress);
-    el.addEventListener('touchend', cancelPress);
-    el.addEventListener('touchmove', cancelPress, { passive: true });
+    // Dùng pointerdown để bắt cả chuột lẫn touch trên màn hình cảm ứng mượt mà nhất
+    el.addEventListener('pointerdown', handleTap);
 
     container.appendChild(el);
 
