@@ -1770,7 +1770,7 @@ document.addEventListener('DOMContentLoaded', () => {
     paddle.width = Math.min(150, window.innerWidth * 0.35);
     paddle.height = 15;
     paddle.x = gameCanvas.width / 2 - paddle.width / 2;
-    paddle.y = gameCanvas.height - 120; // Dịch lên trên một chút so với sát đáy
+    paddle.y = gameCanvas.height - 150; // Dịch lên cao hẳn để không vướng thanh điều hướng điện thoại
     
     // Init ball (Shuttlecock)
     ball.width = 30;
@@ -1845,19 +1845,40 @@ document.addEventListener('DOMContentLoaded', () => {
     gameContext.shadowBlur = 0; // reset
     
     // (Bong bóng chat text is removed as requested by user, paddle is just a normal bar)
-    // Draw Ball (Shuttlecock)
-    gameContext.font = '30px Arial';
-    gameContext.textAlign = 'center';
-    gameContext.textBaseline = 'middle';
-    
-    // Lật quả cầu lông dựa theo chiều rơi
+    // Draw Ball (Shuttlecock drawn manually because emoji has racket)
     gameContext.save();
     gameContext.translate(ball.x + ball.width / 2, ball.y + ball.height / 2);
-    // Nếu đang rơi xuống (vy > 0), chúc đầu cầu xuống
+    // Tính góc dựa theo hướng rơi
     let angle = Math.atan2(ball.vy, ball.vx);
-    // Điều chỉnh xoay cầu lông cho hợp lý
-    gameContext.rotate(angle + Math.PI / 4); 
-    gameContext.fillText('🏸', 0, 0);
+    // Điều chỉnh để phần đuôi hướng lên trên, đầu cầu hướng xuống dưới
+    gameContext.rotate(angle - Math.PI / 2);
+    
+    // Lông cầu (Feathers)
+    gameContext.fillStyle = '#ffffff';
+    gameContext.beginPath();
+    gameContext.moveTo(-14, -15);
+    gameContext.lineTo(14, -15);
+    gameContext.lineTo(7, 8);
+    gameContext.lineTo(-7, 8);
+    gameContext.closePath();
+    gameContext.fill();
+    
+    // Kẻ chỉ lông cầu
+    gameContext.strokeStyle = '#cbd5e1';
+    gameContext.lineWidth = 1.5;
+    gameContext.beginPath();
+    gameContext.moveTo(-10, -5); gameContext.lineTo(10, -5);
+    gameContext.moveTo(-12, -10); gameContext.lineTo(12, -10);
+    gameContext.moveTo(-3, -15); gameContext.lineTo(-1, 8);
+    gameContext.moveTo(3, -15); gameContext.lineTo(1, 8);
+    gameContext.stroke();
+
+    // Đế cầu (Cork)
+    gameContext.fillStyle = '#fef08a';
+    gameContext.beginPath();
+    gameContext.arc(0, 8, 9, 0, Math.PI * 2);
+    gameContext.fill();
+    
     gameContext.restore();
   };
   
