@@ -1451,11 +1451,63 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!pbFabricCanvas || !pbFabricCanvas.backgroundImage) return;
     const bg = pbFabricCanvas.backgroundImage;
     bg.filters = [];
-    if (filterType === 'grayscale') bg.filters.push(new fabric.Image.filters.Grayscale());
-    if (filterType === 'sepia') bg.filters.push(new fabric.Image.filters.Sepia());
+
+    if (filterType === 'film') {
+      bg.filters.push(new fabric.Image.filters.ColorMatrix({
+        matrix: [
+          1.05, 0, 0, 0, 10,
+          0, 1.05, 0, 0, 25, // Green tint in shadows
+          0, 0, 0.95, 0, 5,
+          0, 0, 0, 1, 0
+        ]
+      }));
+      bg.filters.push(new fabric.Image.filters.Contrast({ contrast: -0.05 }));
+      bg.filters.push(new fabric.Image.filters.Blur({ blur: 0.05 }));
+    }
+    
+    if (filterType === 'cinematic') {
+      bg.filters.push(new fabric.Image.filters.ColorMatrix({
+        matrix: [
+          1.1, 0, 0, 0, -10, // More red
+          0, 1.0, 0, 0, 10,  
+          0, 0, 0.9, 0, 30,  // Teal shadows (Blue lifted)
+          0, 0, 0, 1, 0
+        ]
+      }));
+      bg.filters.push(new fabric.Image.filters.Contrast({ contrast: 0.05 }));
+      bg.filters.push(new fabric.Image.filters.Saturation({ saturation: -0.15 }));
+    }
+    
+    if (filterType === 'retro') {
+      bg.filters.push(new fabric.Image.filters.ColorMatrix({
+        matrix: [
+          1.1, 0, 0, 0, 30,
+          0, 1.0, 0, 0, 25,
+          0, 0, 0.8, 0, 15,
+          0, 0, 0, 1, 0
+        ]
+      }));
+      bg.filters.push(new fabric.Image.filters.Contrast({ contrast: -0.1 }));
+      bg.filters.push(new fabric.Image.filters.Blur({ blur: 0.1 }));
+    }
+    
+    if (filterType === 'movie') {
+      bg.filters.push(new fabric.Image.filters.ColorMatrix({
+        matrix: [
+          1.0, 0, 0, 0, 0,
+          0, 1.0, 0, 0, 10,
+          0, 0, 1.0, 0, 20,
+          0, 0, 0, 1, 0
+        ]
+      }));
+      bg.filters.push(new fabric.Image.filters.Contrast({ contrast: 0.1 }));
+      bg.filters.push(new fabric.Image.filters.Saturation({ saturation: -0.2 }));
+    }
+
     if (filterType === 'vintage') bg.filters.push(new fabric.Image.filters.Vintage());
     if (filterType === 'kodak' && fabric.Image.filters.Kodachrome) bg.filters.push(new fabric.Image.filters.Kodachrome());
     if (filterType === 'polaroid' && fabric.Image.filters.Polaroid) bg.filters.push(new fabric.Image.filters.Polaroid());
+    
     bg.applyFilters();
     pbFabricCanvas.renderAll();
   };
