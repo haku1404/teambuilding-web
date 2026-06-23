@@ -1688,6 +1688,8 @@ footer {
   align-items: center;
   gap: 8px;
   animation: flyAcross 12s linear forwards;
+  pointer-events: auto;
+  cursor: pointer;
 }
 
 .danmaku-name {
