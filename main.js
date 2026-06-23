@@ -1374,7 +1374,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     const wrapper = document.getElementById('pb-step-edit');
     const maxWidth = Math.min(wrapper.clientWidth - 40, w);
-    const maxHeight = window.innerHeight * 0.35; // max 35% screen height
+    const maxHeight = window.innerHeight * 0.3; // max 30% screen height
     
     // Scale container to fit both width and height constraints
     const scaleMultiplier = Math.min(maxWidth / w, maxHeight / h);
@@ -1455,9 +1455,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (filterType === 'film') {
       bg.filters.push(new fabric.Image.filters.ColorMatrix({
         matrix: [
-          1.05, 0, 0, 0, 10,
-          0, 1.05, 0, 0, 25, // Green tint in shadows
-          0, 0, 0.95, 0, 5,
+          1.05, 0, 0, 0, 0.04,
+          0, 1.05, 0, 0, 0.1, // Green tint in shadows
+          0, 0, 0.95, 0, 0.02,
           0, 0, 0, 1, 0
         ]
       }));
@@ -1468,9 +1468,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (filterType === 'cinematic') {
       bg.filters.push(new fabric.Image.filters.ColorMatrix({
         matrix: [
-          1.1, 0, 0, 0, -10, // More red
-          0, 1.0, 0, 0, 10,  
-          0, 0, 0.9, 0, 30,  // Teal shadows (Blue lifted)
+          1.1, 0, 0, 0, -0.04, // More red
+          0, 1.0, 0, 0, 0.04,  
+          0, 0, 0.9, 0, 0.12,  // Teal shadows (Blue lifted)
           0, 0, 0, 1, 0
         ]
       }));
@@ -1481,9 +1481,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (filterType === 'retro') {
       bg.filters.push(new fabric.Image.filters.ColorMatrix({
         matrix: [
-          1.1, 0, 0, 0, 30,
-          0, 1.0, 0, 0, 25,
-          0, 0, 0.8, 0, 15,
+          1.1, 0, 0, 0, 0.12,
+          0, 1.0, 0, 0, 0.1,
+          0, 0, 0.8, 0, 0.06,
           0, 0, 0, 1, 0
         ]
       }));
@@ -1494,9 +1494,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (filterType === 'retro-film') {
       bg.filters.push(new fabric.Image.filters.ColorMatrix({
         matrix: [
-          1.15, 0, 0, 0, 40,   // Boost red, add warm offset
-          0, 1.05, 0, 0, 20,   // Boost green, add warm offset
-          0, 0, 0.85, 0, -10,  // Reduce blue
+          1.15, 0, 0, 0, 0.16,   // Boost red, add warm offset
+          0, 1.05, 0, 0, 0.08,   // Boost green, add warm offset
+          0, 0, 0.85, 0, -0.04,  // Reduce blue
           0, 0, 0, 1, 0
         ]
       }));
@@ -1508,8 +1508,8 @@ document.addEventListener('DOMContentLoaded', () => {
       bg.filters.push(new fabric.Image.filters.ColorMatrix({
         matrix: [
           1.0, 0, 0, 0, 0,
-          0, 1.0, 0, 0, 10,
-          0, 0, 1.0, 0, 20,
+          0, 1.0, 0, 0, 0.04,
+          0, 0, 1.0, 0, 0.08,
           0, 0, 0, 1, 0
         ]
       }));
