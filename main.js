@@ -1749,18 +1749,25 @@ document.addEventListener('DOMContentLoaded', () => {
     gameCanvas.height = window.innerHeight;
     gameContext = gameCanvas.getContext('2d');
     
-    // Init objects
-    ball.width = Math.min(250, window.innerWidth - 40);
+    // Calculate paddle width based on text length
+    gameContext.font = 'bold 14px Outfit';
+    let fullText = (currentMsgData.name || "Ẩn danh") + ": " + (currentMsgData.text || "");
+    let textWidth = gameContext.measureText(fullText).width;
+    
+    paddle.width = Math.min(window.innerWidth - 20, Math.max(150, textWidth + 30));
+    paddle.height = 40;
+    paddle.x = gameCanvas.width / 2 - paddle.width / 2;
+    paddle.y = gameCanvas.height - 100; // Cao lên một chút để dễ bấm
+    
+    // Init ball (Shuttlecock)
+    ball.width = 30;
+    ball.height = 30;
     ball.x = Math.random() * (gameCanvas.width - ball.width);
     ball.y = gameCanvas.height * 0.2;
     // Tốc độ ban đầu
     const speed = window.innerWidth < 600 ? 5 : 7;
     ball.vx = (Math.random() > 0.5 ? 1 : -1) * speed;
     ball.vy = speed;
-    
-    paddle.width = Math.min(150, window.innerWidth * 0.35);
-    paddle.x = gameCanvas.width / 2 - paddle.width / 2;
-    paddle.y = gameCanvas.height - 80; // Cao lên một chút để dễ bấm trên điện thoại
     
     // Controls
     const movePaddle = (e) => {
@@ -1832,38 +1839,46 @@ document.addEventListener('DOMContentLoaded', () => {
     gameContext.textBaseline = 'middle';
     gameContext.fillText(gameScore, gameCanvas.width / 2, gameCanvas.height / 2);
 
-    // Draw Paddle
-    gameContext.fillStyle = '#10b981'; // Green primary
-    gameContext.beginPath();
-    gameContext.roundRect(paddle.x, paddle.y, paddle.width, paddle.height, 8);
-    gameContext.fill();
-    
-    // Draw Ball (Chat bubble)
+    // Draw Paddle (Chat bubble)
     gameContext.fillStyle = '#ffffff';
     gameContext.shadowColor = 'rgba(0,0,0,0.5)';
     gameContext.shadowBlur = 15;
     gameContext.beginPath();
-    gameContext.roundRect(ball.x, ball.y, ball.width, ball.height, 20);
+    gameContext.roundRect(paddle.x, paddle.y, paddle.width, paddle.height, 20);
     gameContext.fill();
-    
     gameContext.shadowBlur = 0; // reset
     
-    // Draw Text
+    // Draw Text on Paddle
     gameContext.fillStyle = '#1e293b';
     gameContext.font = 'bold 14px Outfit';
     gameContext.textAlign = 'left';
     gameContext.textBaseline = 'middle';
     
-    const maxTextWidth = ball.width - 20;
+    const maxTextWidth = paddle.width - 20;
     let displayName = (currentMsgData.name || "Ẩn danh") + ":";
     let displayText = currentMsgData.text || "";
     
     gameContext.fillStyle = '#10b981';
-    gameContext.fillText(displayName, ball.x + 10, ball.y + ball.height / 2);
+    gameContext.fillText(displayName, paddle.x + 10, paddle.y + paddle.height / 2);
     
     gameContext.fillStyle = '#475569';
-    let textX = ball.x + 15 + gameContext.measureText(displayName).width;
-    gameContext.fillText(displayText, textX, ball.y + ball.height / 2, Math.max(10, maxTextWidth - gameContext.measureText(displayName).width - 5));
+    let textX = paddle.x + 15 + gameContext.measureText(displayName).width;
+    gameContext.fillText(displayText, textX, paddle.y + paddle.height / 2, Math.max(10, maxTextWidth - gameContext.measureText(displayName).width - 5));
+
+    // Draw Ball (Shuttlecock)
+    gameContext.font = '30px Arial';
+    gameContext.textAlign = 'center';
+    gameContext.textBaseline = 'middle';
+    
+    // Lật quả cầu lông dựa theo chiều rơi
+    gameContext.save();
+    gameContext.translate(ball.x + ball.width / 2, ball.y + ball.height / 2);
+    // Nếu đang rơi xuống (vy > 0), chúc đầu cầu xuống
+    let angle = Math.atan2(ball.vy, ball.vx);
+    // Điều chỉnh xoay cầu lông cho hợp lý
+    gameContext.rotate(angle + Math.PI / 4); 
+    gameContext.fillText('🏸', 0, 0);
+    gameContext.restore();
   };
   
   const showGameOver = () => {
