@@ -1490,6 +1490,19 @@ document.addEventListener('DOMContentLoaded', () => {
       bg.filters.push(new fabric.Image.filters.Contrast({ contrast: -0.1 }));
       bg.filters.push(new fabric.Image.filters.Blur({ blur: 0.1 }));
     }
+
+    if (filterType === 'retro-film') {
+      bg.filters.push(new fabric.Image.filters.ColorMatrix({
+        matrix: [
+          1.15, 0, 0, 0, 40,   // Boost red, add warm offset
+          0, 1.05, 0, 0, 20,   // Boost green, add warm offset
+          0, 0, 0.85, 0, -10,  // Reduce blue
+          0, 0, 0, 1, 0
+        ]
+      }));
+      bg.filters.push(new fabric.Image.filters.Contrast({ contrast: -0.05 }));
+      bg.filters.push(new fabric.Image.filters.Saturation({ saturation: -0.1 }));
+    }
     
     if (filterType === 'movie') {
       bg.filters.push(new fabric.Image.filters.ColorMatrix({
