@@ -144,7 +144,8 @@ document.addEventListener('DOMContentLoaded', () => {
       dayName: 'Thứ Bảy',
       theme: 'Let\'s Gooo',
       events: [
-        { time: '11:00', title: 'Tập trung & Khởi hành', desc: 'Địa điểm tập trung sẽ cập nhật sau.' },
+        { time: '12:30', title: 'Tập trung', desc: 'Địa điểm: Nhà Hoàng (sđt: 0981416564) - Sơn nhà trọn gói Tây Sơn<br><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d279.2588501912943!2d105.65815496319071!3d21.002104269233996!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31345105c9bb3747%3A0x3f1689fddb0de581!2zU8ahbiBuaMOgIHRy4buNbiBnw7NpIFTDonkgU8ahbg!5e0!3m2!1svi!2s!4v1783650534187!5m2!1svi!2s" width="100%" height="200" style="border:0; margin-top: 10px; border-radius: 8px;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>' },
+        { time: '13:15', title: 'Đón thêm', desc: 'Đón thêm người tại cổng sau BigC đường Tú Mỡ.' },
         { time: '14:00', title: 'Check-in', desc: 'Nhận phòng, cất hành lý và nghỉ ngơi nhẹ.' },
         { time: '15:00', title: 'Giải Đấu Pickleball <span onclick="openModal(\'rules-modal\')" style="display: inline-block; white-space: nowrap; font-size: 0.75rem; background: var(--primary-color); color: #fff; padding: 2px 8px; border-radius: 12px; cursor: pointer; margin-left: 8px; vertical-align: middle; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">📖 Xem Luật</span>', desc: 'Chia cặp và vung vợt tranh tài nảy lửa.' },
         { time: '17:30', title: 'Bơi', desc: 'Giải nhiệt tại bể bơi vô cực.' },
@@ -258,13 +259,17 @@ document.addEventListener('DOMContentLoaded', () => {
   if(statsSection) statsObserver.observe(statsSection);
 
   // 3. Render Room List Mock Data
-  const mockNames = [
-    'Nguyễn Văn A', 'Trần Thị B', 'Lê Văn C', 'Phạm Thị D',
-    'Hoàng Văn E', 'Vũ Thị F', 'Đặng Văn G', 'Bùi Thị H',
-    'Ngô Thị I', 'Đỗ Văn K', 'Lý Thị L', 'Đoàn Văn M',
-    'Bùi Văn N', 'Võ Thị O', 'Phan Văn P', 'Lương Thị Q'
+  let groupUnits = [
+    'Danh Minh & Phương Anh',
+    'Hậu Nc & Trang Emma',
+    'Viết Thịnh & Hồng Loan (+ bé Bún)',
+    'Thảo Ngọc & Hiếu',
+    'Tuấn Đức & Huyền Trang',
+    'Quyết (cô đơn)',
+    'Thăng Long & Thanh Hằng',
+    'Đức Hoàng & Duyên'
   ];
-  let currentNameIndex = 0;
+  let isRoomConfirmed = false;
   
   const actualRooms = [
     { name: 'P. Đôi 1 (Villa)', capacity: 2, pin: 'pin-villa' },
@@ -277,28 +282,59 @@ document.addEventListener('DOMContentLoaded', () => {
     { name: 'Tập Thể (Hồ Bơi)', capacity: 4, pin: 'pin-pool' }
   ];
 
-  const membersGrid = document.getElementById('members-grid');
+  window.spinRooms = () => {
+    if (isRoomConfirmed) return;
+    
+    let iterations = 0;
+    const interval = setInterval(() => {
+      // Shuffle array
+      groupUnits = groupUnits.sort(() => Math.random() - 0.5);
+      renderRooms(groupUnits);
+      iterations++;
+      if (iterations > 15) {
+        clearInterval(interval);
+        document.getElementById('btn-spin-rooms').style.display = 'none';
+        document.getElementById('btn-confirm-rooms').style.display = 'inline-block';
+        document.getElementById('btn-reset-rooms').style.display = 'inline-block';
+      }
+    }, 100);
+  };
 
-  if (membersGrid) {
+  window.confirmRooms = () => {
+    isRoomConfirmed = true;
+    document.getElementById('btn-confirm-rooms').textContent = '🔒 Đã chốt';
+    document.getElementById('btn-confirm-rooms').disabled = true;
+    document.getElementById('btn-reset-rooms').style.display = 'none';
+    alert("Danh sách phòng đã được chốt!");
+  };
+
+  window.resetRooms = () => {
+    isRoomConfirmed = false;
+    document.getElementById('btn-spin-rooms').style.display = 'inline-block';
+    document.getElementById('btn-confirm-rooms').style.display = 'none';
+    document.getElementById('btn-confirm-rooms').disabled = false;
+    document.getElementById('btn-confirm-rooms').textContent = '✅ Chốt Danh Sách';
+    document.getElementById('btn-reset-rooms').style.display = 'none';
+  };
+
+  const renderRooms = (units) => {
+    const membersGrid = document.getElementById('members-grid');
+    if (!membersGrid) return;
     membersGrid.innerHTML = `
-      <div class="table-container glass-card" style="padding: 0; overflow: hidden;">
+      <div class="table-container glass-card" style="padding: 0; overflow: hidden; margin-top: 20px;">
         <div style="overflow-x: auto;">
-          <table class="member-table" style="width: 100%;">
+          <table class="member-table">
             <thead>
               <tr>
-                <th style="width: 30%;">PHÒNG</th>
-                <th style="width: 20%;">SỐ LƯỢNG</th>
-                <th>THÀNH VIÊN</th>
+                <th style="width: 30%">TÊN PHÒNG</th>
+                <th style="width: 20%">SỨC CHỨA</th>
+                <th style="width: 50%">NGƯỜI Ở</th>
               </tr>
             </thead>
             <tbody>
-              ${actualRooms.map(room => {
-                const roomMembers = [];
-                for (let j = 0; j < room.capacity; j++) {
-                  roomMembers.push(mockNames[currentNameIndex % mockNames.length]);
-                  currentNameIndex++;
-                }
-                const memberListHtml = roomMembers.map(name => `<span style="display:inline-block; padding: 4px 8px; background: rgba(35, 78, 42, 0.1); border-radius: 4px; margin: 2px;">${name}</span>`).join('');
+              ${actualRooms.map((room, index) => {
+                const roomMember = units[index];
+                const memberListHtml = `<span style="display:inline-block; padding: 4px 8px; background: rgba(35, 78, 42, 0.1); border-radius: 4px; margin: 2px;">${roomMember}</span>`;
                 
                 return `
                   <tr style="cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.background='transparent'" onclick="highlightMapPin('${room.pin}')">
@@ -317,6 +353,7 @@ document.addEventListener('DOMContentLoaded', () => {
       </div>
     `;
   }
+  renderRooms(groupUnits);
 
   window.highlightMapPin = (pinId) => {
     // Cuộn lên phần bản đồ
@@ -353,22 +390,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Render Member List Table
   const membersList = [
-    { id: 1, name: 'Nguyễn Văn A', phone: '0987 654 321', travel: '🚗 Xe đoàn', note: 'Dị ứng hải sản' },
-    { id: 2, name: 'Trần Thị B', phone: '0912 345 678', travel: '🚗 Xe đoàn', note: '' },
-    { id: 3, name: 'Lê Văn C', phone: '0909 111 222', travel: '🏍️ Tự di chuyển', note: 'Mang theo loa kéo' },
-    { id: 4, name: 'Phạm Thị D', phone: '0988 999 888', travel: '🚗 Xe đoàn', note: '' },
-    { id: 5, name: 'Hoàng Văn E', phone: '0977 666 555', travel: '🏍️ Tự di chuyển', note: '' },
-    { id: 6, name: 'Vũ Thị F', phone: '0966 555 444', travel: '🚗 Xe đoàn', note: 'Ăn chay' },
-    { id: 7, name: 'Đặng Văn G', phone: '0955 444 333', travel: '🚗 Xe đoàn', note: '' },
-    { id: 8, name: 'Bùi Thị H', phone: '0944 333 222', travel: '🏍️ Tự di chuyển', note: 'Đến trễ 1 tiếng' },
-    { id: 9, name: 'Đỗ Văn I', phone: '0933 222 111', travel: '🚗 Xe đoàn', note: '' },
-    { id: 10, name: 'Hồ Thị K', phone: '0922 111 000', travel: '🚗 Xe đoàn', note: '' },
-    { id: 11, name: 'Ngô Văn L', phone: '0911 000 999', travel: '🏍️ Tự di chuyển', note: '' },
-    { id: 12, name: 'Dương Thị M', phone: '0900 999 888', travel: '🚗 Xe đoàn', note: 'Ban tổ chức' },
-    { id: 13, name: 'Lý Văn N', phone: '0899 888 777', travel: '🚗 Xe đoàn', note: '' },
-    { id: 14, name: 'Đoàn Thị P', phone: '0888 777 666', travel: '🏍️ Tự di chuyển', note: '' },
-    { id: 15, name: 'Trịnh Văn Q', phone: '0877 666 555', travel: '🚗 Xe đoàn', note: '' },
-    { id: 16, name: 'Đinh Thị R', phone: '0866 555 444', travel: '🚗 Xe đoàn', note: '' }
+    { id: 1, name: 'Danh Minh', phone: 'Chưa có thông tin', travel: '🚗 Xe đoàn', note: '' },
+    { id: 2, name: 'Phương Anh', phone: 'Chưa có thông tin', travel: '🚗 Xe đoàn', note: '' },
+    { id: 3, name: 'Hậu Nc', phone: 'Chưa có thông tin', travel: '🚗 Xe đoàn', note: '' },
+    { id: 4, name: 'Trang Emma', phone: 'Chưa có thông tin', travel: '🚗 Xe đoàn', note: '' },
+    { id: 5, name: 'Viết Thịnh', phone: '0868913308', travel: '🚗 Xe đoàn', note: '' },
+    { id: 6, name: 'Hồng Loan', phone: 'Chưa có thông tin', travel: '🚗 Xe đoàn', note: 'Kèm bé Bún' },
+    { id: 7, name: 'Thảo Ngọc', phone: 'Chưa có thông tin', travel: '🚗 Xe đoàn', note: '' },
+    { id: 8, name: 'Hiếu', phone: '0967587296', travel: '🚗 Xe đoàn', note: '' },
+    { id: 9, name: 'Tuấn Đức', phone: 'Chưa có thông tin', travel: '🚗 Xe đoàn', note: '' },
+    { id: 10, name: 'Huyền Trang', phone: 'Chưa có thông tin', travel: '🚗 Xe đoàn', note: '' },
+    { id: 11, name: 'Quyết', phone: '0969566646', travel: '🚗 Xe đoàn', note: 'Quyết cô đơn' },
+    { id: 12, name: 'Thăng Long', phone: '0869355822', travel: '🚗 Xe đoàn', note: '' },
+    { id: 13, name: 'Thanh Hằng', phone: 'Chưa có thông tin', travel: '🚗 Xe đoàn', note: '' },
+    { id: 14, name: 'Đức Hoàng', phone: '0981416564', travel: '🚗 Xe đoàn', note: '' },
+    { id: 15, name: 'Duyên', phone: 'Chưa có thông tin', travel: '🚗 Xe đoàn', note: '' }
   ];
 
   const tableBody = document.getElementById('member-table-body');
