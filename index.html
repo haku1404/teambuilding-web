@@ -371,10 +371,22 @@
       <!-- Tab Content: Rooms (Grid) -->
       <div id="tab-room-list" class="tab-content">
         <div style="text-align: center; margin-bottom: 20px;">
-          <button id="btn-spin-rooms" class="btn btn-primary" onclick="spinRooms()" style="margin: 5px;">🎲 Quay Ngẫu Nhiên</button>
+          <button id="btn-start-wheel" class="btn btn-primary" onclick="startWheelSequence()" style="margin: 5px;">🎡 Bắt đầu Quay Phân Phòng</button>
           <button id="btn-confirm-rooms" class="btn" onclick="confirmRooms()" style="margin: 5px; display: none; background: #10b981; color: white;">✅ Chốt Danh Sách</button>
           <button id="btn-reset-rooms" class="btn" onclick="resetRooms()" style="margin: 5px; display: none; background: #ef4444; color: white;">🔄 Quay Lại</button>
         </div>
+        
+        <!-- Wheel Container -->
+        <div id="wheel-container" style="display: none; text-align: center; margin-bottom: 30px; background: rgba(15, 23, 42, 0.6); padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
+          <h3 id="wheel-target-room" style="color: #fcd34d; margin-bottom: 15px; font-size: 1.2rem;">Đang chọn cho: <span style="color: #fff;">Phòng Đôi 1</span></h3>
+          <div style="position: relative; width: 280px; height: 280px; margin: 0 auto;">
+            <!-- Pointer -->
+            <div style="position: absolute; top: -10px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 25px solid #ef4444; z-index: 10; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));"></div>
+            <canvas id="spin-wheel" width="280" height="280" style="border-radius: 50%; box-shadow: 0 0 15px rgba(0,0,0,0.5);"></canvas>
+          </div>
+          <button id="btn-spin-action" class="btn" onclick="startWheelSpin()" style="margin-top: 20px; background: #3b82f6; color: white; padding: 10px 30px; font-size: 1.1rem; border-radius: 25px;">🎰 Quay!</button>
+        </div>
+
         <div class="members-grid" id="members-grid">
           <!-- Room cards injected by JS -->
         </div>

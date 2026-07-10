@@ -282,22 +282,128 @@ document.addEventListener('DOMContentLoaded', () => {
     { name: 'Tập Thể (Hồ Bơi)', capacity: 4, pin: 'pin-pool' }
   ];
 
-  window.spinRooms = () => {
+  let remainingUnits = [...groupUnits];
+  let assignedUnits = new Array(actualRooms.length).fill('?');
+  let currentRoomIndex = 0;
+  let isWheelSpinning = false;
+  let wheelRotation = 0;
+
+  window.startWheelSequence = () => {
     if (isRoomConfirmed) return;
+    document.getElementById('btn-start-wheel').style.display = 'none';
+    document.getElementById('wheel-container').style.display = 'block';
     
-    let iterations = 0;
-    const interval = setInterval(() => {
-      // Shuffle array
-      groupUnits = groupUnits.sort(() => Math.random() - 0.5);
-      renderRooms(groupUnits);
-      iterations++;
-      if (iterations > 15) {
-        clearInterval(interval);
-        document.getElementById('btn-spin-rooms').style.display = 'none';
-        document.getElementById('btn-confirm-rooms').style.display = 'inline-block';
-        document.getElementById('btn-reset-rooms').style.display = 'inline-block';
+    remainingUnits = [...groupUnits];
+    assignedUnits = new Array(actualRooms.length).fill('?');
+    currentRoomIndex = 0;
+    wheelRotation = 0;
+    
+    document.querySelector('#wheel-target-room span').textContent = actualRooms[currentRoomIndex].name;
+    document.getElementById('btn-spin-action').disabled = false;
+    isWheelSpinning = false;
+    
+    drawWheel();
+    renderRooms(assignedUnits);
+  };
+
+  const drawWheel = (rotation = wheelRotation) => {
+    const canvas = document.getElementById('spin-wheel');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const width = canvas.width;
+    const height = canvas.height;
+    const center = width / 2;
+    const radius = center - 5;
+    
+    ctx.clearRect(0, 0, width, height);
+    if (remainingUnits.length === 0) return;
+    
+    const sliceAngle = (2 * Math.PI) / remainingUnits.length;
+    const colors = ['#f87171', '#fbbf24', '#34d399', '#60a5fa', '#a78bfa', '#f472b6', '#38bdf8', '#a3e635'];
+    
+    ctx.save();
+    ctx.translate(center, center);
+    ctx.rotate(rotation);
+    
+    for (let i = 0; i < remainingUnits.length; i++) {
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.arc(0, 0, radius, i * sliceAngle, (i + 1) * sliceAngle);
+      ctx.fillStyle = colors[i % colors.length];
+      ctx.fill();
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = '#0f172a';
+      ctx.stroke();
+      
+      // Draw text
+      ctx.save();
+      ctx.rotate(i * sliceAngle + sliceAngle / 2);
+      ctx.textAlign = "right";
+      ctx.fillStyle = "#fff";
+      ctx.font = "bold 14px Outfit";
+      ctx.shadowColor = 'rgba(0,0,0,0.5)';
+      ctx.shadowBlur = 4;
+      // Chỉ lấy tên đầu tiên cho vừa Wheel
+      const shortName = remainingUnits[i].split(' ')[0] + (remainingUnits[i].includes('&') ? ' &...' : '');
+      ctx.fillText(shortName, radius - 15, 5); 
+      ctx.restore();
+    }
+    ctx.restore();
+  };
+
+  window.startWheelSpin = () => {
+    if (isWheelSpinning || remainingUnits.length === 0) return;
+    isWheelSpinning = true;
+    document.getElementById('btn-spin-action').disabled = true;
+    
+    const winnerIndex = Math.floor(Math.random() * remainingUnits.length);
+    const sliceAngle = (2 * Math.PI) / remainingUnits.length;
+    
+    // Tính góc cần quay để winnerIndex nằm ở góc -Math.PI / 2 (vị trí pointer)
+    const targetBaseRotation = - (winnerIndex * sliceAngle + sliceAngle/2) - Math.PI/2;
+    const extraSpins = 10 * 2 * Math.PI; // Quay 10 vòng
+    const targetRotation = targetBaseRotation - extraSpins; // Quay ngược chiều kim đồng hồ
+    
+    const startTime = performance.now();
+    const duration = 4000;
+    const startRotation = wheelRotation;
+    
+    // Easing function
+    const easeOutCubic = (x) => 1 - Math.pow(1 - x, 3);
+    
+    const animate = (time) => {
+      let progress = (time - startTime) / duration;
+      if (progress > 1) progress = 1;
+      
+      wheelRotation = startRotation + (targetRotation - startRotation) * easeOutCubic(progress);
+      drawWheel(wheelRotation);
+      
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      } else {
+        // Spin finished
+        const winner = remainingUnits.splice(winnerIndex, 1)[0];
+        assignedUnits[currentRoomIndex] = winner;
+        currentRoomIndex++;
+        
+        renderRooms(assignedUnits);
+        
+        if (currentRoomIndex < actualRooms.length) {
+          document.querySelector('#wheel-target-room span').textContent = actualRooms[currentRoomIndex].name;
+          isWheelSpinning = false;
+          document.getElementById('btn-spin-action').disabled = false;
+          // Normalize rotation
+          wheelRotation = wheelRotation % (2 * Math.PI);
+          drawWheel(wheelRotation);
+        } else {
+          // Finished all
+          document.getElementById('wheel-container').style.display = 'none';
+          document.getElementById('btn-confirm-rooms').style.display = 'inline-block';
+          document.getElementById('btn-reset-rooms').style.display = 'inline-block';
+        }
       }
-    }, 100);
+    };
+    requestAnimationFrame(animate);
   };
 
   window.confirmRooms = () => {
@@ -310,11 +416,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.resetRooms = () => {
     isRoomConfirmed = false;
-    document.getElementById('btn-spin-rooms').style.display = 'inline-block';
+    document.getElementById('btn-start-wheel').style.display = 'inline-block';
     document.getElementById('btn-confirm-rooms').style.display = 'none';
     document.getElementById('btn-confirm-rooms').disabled = false;
     document.getElementById('btn-confirm-rooms').textContent = '✅ Chốt Danh Sách';
     document.getElementById('btn-reset-rooms').style.display = 'none';
+    
+    assignedUnits = new Array(actualRooms.length).fill('?');
+    renderRooms(assignedUnits);
   };
 
   const renderRooms = (units) => {
@@ -334,7 +443,9 @@ document.addEventListener('DOMContentLoaded', () => {
             <tbody>
               ${actualRooms.map((room, index) => {
                 const roomMember = units[index];
-                const memberListHtml = `<span style="display:inline-block; padding: 4px 8px; background: rgba(35, 78, 42, 0.1); border-radius: 4px; margin: 2px;">${roomMember}</span>`;
+                const memberListHtml = roomMember === '?' 
+                  ? `<span style="color: #94a3b8; font-style: italic;">Chưa có</span>`
+                  : `<span style="display:inline-block; padding: 4px 8px; background: rgba(35, 78, 42, 0.1); border-radius: 4px; margin: 2px;">${roomMember}</span>`;
                 
                 return `
                   <tr style="cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.background='transparent'" onclick="highlightMapPin('${room.pin}')">
@@ -352,8 +463,8 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
       </div>
     `;
-  }
-  renderRooms(groupUnits);
+  };
+  renderRooms(assignedUnits);
 
   window.highlightMapPin = (pinId) => {
     // Cuộn lên phần bản đồ
